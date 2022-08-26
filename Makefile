@@ -3,8 +3,8 @@ SOURCES = $(wildcard *.cpp)
 OBJS = $(SOURCES:.cpp=.o)
 INCLUDES = $(wildcard *.h)
 CC = g++
-CFLAGS = -std=c++17 -g -DFATVM
-%CFLAGS = -std=c++17 -g -DTINYVM
+%CFLAGS = -std=c++17 -g -DFATVM
+CFLAGS = -std=c++17 -g -DTHINVM
 %CFLAGS = -std=c++17 -ffast-math -march=native
 EXEC = main
 	
@@ -24,4 +24,4 @@ clean:
 	rm -rf *.o $(NAME)
 
 run: $(EXEC)
-	./$(EXEC) 4 < input/grande.dob
+	./$(EXEC) < input/sipht.dob

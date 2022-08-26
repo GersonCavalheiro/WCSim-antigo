@@ -21,9 +21,9 @@ public:
   virtual inline int getVRam() const { return vRam; }
 };
 
-class TinyInstance : public Instance {
+class ThinInstance : public Instance {
 public:
-  TinyInstance( int vCores = 1, int vMips = 10, int vRam = 4 ) 
+  ThinInstance( int vCores = 1, int vMips = 10, int vRam = 4 ) 
      : Instance( vCores, vMips, vRam ) {}
 };
 
