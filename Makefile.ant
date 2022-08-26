@@ -1,0 +1,56 @@
+NAME = main
+SOURCE = $(NAME).cpp
+INCLUDES = utils.h bot.h virtualmachine.h user.h globalclock.h task.h event.h node.h cloud.h simulator.h
+CC = g++
+CFLAGS = -std=c++17 -ffast-math -march=native
+OBJ = $(NAME).o
+EXEC = main
+	
+main: main.o bot.o event.o utils.o globalclock.o task.o simulator.o cloud.o node.o virtualmachine.o user.o
+	$(CC) -o $(NAME) main.o bot.o event.o utils.o globalclock.o task.o simulator.o cloud.o node.o virtualmachine.o user.o
+	rm main.o
+
+main.o: main.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) main.cpp
+
+user.o: user.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) user.cpp
+
+bot.o: bot.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) bot.cpp
+
+task.o: task.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) task.cpp
+
+simulator.o: simulator.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) simulator.cpp
+
+virtualmachine.o: virtualmachine.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) virtualmachine.cpp
+
+node.o: node.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) node.cpp
+
+cloud.o: cloud.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) cloud.cpp
+
+event.o: event.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) event.cpp
+
+utils.o: utils.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) utils.cpp
+
+globalclock.o: globalclock.cpp $(INCLUDES)
+	$(CC) -c $(CFLAGS) globalclock.cpp
+
+git:
+	rm -rf *.o $(NAME)
+	git add .
+	git commit -m "Backup"
+	git push
+
+clean:
+	rm -rf *.o $(NAME)
+
+run: $(EXEC)
+	./$(EXEC) 4 < sipht.dob
