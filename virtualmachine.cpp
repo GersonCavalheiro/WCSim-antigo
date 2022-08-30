@@ -4,6 +4,7 @@
 #include "node.h"
 #include "task.h"
 #include "user.h"
+#include "instance.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ VM::VM( Instance inst, Node* node, User* owner ) :
 }
 
 void VM::pushTask( Task *task ) {
+  place(task);
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( *it == task ) { cout << "existe\n"; exit(0); }
 // ---- Setar fim da tarefa e atualizar fim de todas
@@ -39,6 +41,7 @@ void VM::pushTask( Task *task ) {
 void VM::popTask( Task *task ) {
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( *it == task ) {
+      unplace(task);
       taskL.erase(it);
       --runningTasks;
       return;
@@ -48,7 +51,7 @@ void VM::popTask( Task *task ) {
 int VM::getNodeRunningId() const  { return running->getId(); }
 
 
-int VM::loadNbInstructions() {
+int VM::getLoadNbInstructions() {
   int nbInstructions = 0;
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     nbInstructions += (*it)->getNbInstructions();

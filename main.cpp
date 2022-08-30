@@ -44,11 +44,6 @@ int main() {
   Simulator::run();
 
   cout << "++++++\n";
-  vector<int> v;
-  Cloud::getLinkSpeed(3,v);
-  for (int s : v ) 
-   cout << s << " ";
-  cout << "\n++++++\n";
   cout << "Global::Clock: " << GlobalClock::get() << endl;
 
 

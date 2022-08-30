@@ -36,6 +36,7 @@ public:
   inline VM*   getVMRunning() const { return vmRunning; }
   inline int   getId() const { return taskId; }
   inline int   getNbInstructions() const { return botAttr[nbInstructions]; }
+  inline int   getRam() const { return botAttr[memTask]; }
   inline BoT*  getBoT() const { return myBoT; }
   inline void  setDataStamp() { lastDataStamp = GlobalClock::get(); }
   inline int   getDataStamp() const { return lastDataStamp; }

@@ -15,7 +15,7 @@ VM* VMSchedule::selectVMByNbTasks( User& owner, Task& task ) {
   auto it = owner.getVMPool().begin();
   VM*  vm = *it;
   for( ; it != owner.getVMPool().end() ; ++it )
-    if( vm->loadNbTasks() > (*it)->loadNbTasks() )
+    if( vm->getLoadNbTasks() > (*it)->getLoadNbTasks() )
       vm = *it;
 
   return vm;
@@ -26,7 +26,7 @@ VM* VMSchedule::selectVMByNbInstructions( User& owner, Task& task ) {
   auto it = owner.getVMPool().begin();
   VM*  vm = *it;
   for( ; it != owner.getVMPool().end() ; ++it )
-    if( vm->loadNbInstructions() > (*it)->loadNbInstructions() )
+    if( vm->getLoadNbInstructions() > (*it)->getLoadNbInstructions() )
       vm = *it;
 
   return vm;
