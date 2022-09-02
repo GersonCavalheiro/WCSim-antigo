@@ -24,24 +24,34 @@ class Node : public Component {
 
 public:
   Node( const string name, const int id, const int risingDate, const int bmFamily );
-  inline int    getId() const { return id; }
-  inline int    getIId() const { return iId; }
-  inline int    getNodeNb(int nodeId) const { return nodesListById[nodeId]->getIId(); }
-  static inline int getNbNodes() { return nodeCount; }
-  inline int    getSpeed() const { return bm->getSpeed(); }
-  inline int    getRisingDate() const { return risingDate; }
-  inline int    getStatus() const { return status; }
-  inline bool   isOnline() const { return status == online; }
-  inline void   setStatus( int st ) { status = st; }
-  inline string getName() const { return nodeName; }
-  void pushNewVM( vector<VM*>& vmPool );
-  void pushNewVM( VM* vm );
-  friend ostream& operator<<( ostream& out, Node& n );
-  void printStatus();
-  static bool isActive( int nodeId ) { return (nodesListById.find(nodeId) != nodesListById.end()) ? true : false; }
+  inline int    getId()               const { return id; }
+  inline int    getIId()              const { return iId; }
+  inline int    getNodeNb(int nodeId) const
+    { return nodesListById[nodeId]->getIId(); }
+  inline int    getSpeed()            const { return bm->getSpeed(); }
+  inline int    getRisingDate()       const { return risingDate; }
+  inline int    getStatus()           const { return status; }
+  inline bool   isOnline()            const { return status == online; }
+  inline void   setStatus( int st )         { status = st; }
+  inline string getName() const             { return nodeName; }
+  inline int    getNbVMs()            const { return vmL.size(); }
+
+  void pushVM( vector<VM*>& vmPool );
+  void pushVM( VM* vm );
+
+  inline void catchCore() { bm->pinCore(); }
+  inline void throwCore() { bm->releaseCore(); }
+
+  static inline bool isActive( int nodeId )
+    { return nodesListById.find(nodeId) != nodesListById.end(); }
+  static inline int  getNbNodes()
+    { return nodeCount; }
   static Node* getNodePtrById( int nodeId );
   static void insertNodeInLists( Node *n );
+
+  friend ostream& operator<<( ostream& out, Node& n );
   static void printAllNodes();
+  void printStatus();
 };
 
 #endif

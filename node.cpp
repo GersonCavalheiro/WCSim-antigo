@@ -62,13 +62,14 @@ void Node::printAllNodes() {
     cout << *it->second << endl;
 }
 
-void Node::pushNewVM( vector<VM*>& vmL ) {
+void Node::pushVM( vector<VM*>& vmL ) {
   for( auto it = vmL.begin() ; it != vmL.end() ; ++it )
-   pushNewVM(*it);
+   pushVM(*it);
   vmL.clear();
 }
 
-void Node::pushNewVM( VM* vm ) {
+void Node::pushVM( VM *vm ) {
+  bm->place(vm);
   vmL.push_back(vm); 
 }
 

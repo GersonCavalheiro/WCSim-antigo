@@ -17,7 +17,7 @@ main : $(OBJS)
 git:
 	rm -rf *.o $(NAME)
 	git add .
-	git commit -m "Backup"
+	git commit -m "Antes de fazer Node : public BareMetal"
 	git push
 
 clean:

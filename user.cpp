@@ -46,7 +46,7 @@ bool User::rentNewVMs( int n ) {
   if( n <= 0 ) return false;
   for( ; n > 0 ; --n ) {
 #ifdef THINVM
-    auto vm = VM::createNewVM(ThinInstance(),myHostNode,this);
+    auto vm = VM::createNewVM(myHostNode,this);
 #endif
 #ifndef THINVM
     auto vm = VM::createNewVM(FatInstance(),myHostNode,this);

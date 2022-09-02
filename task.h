@@ -31,8 +31,8 @@ public:
   void setStatus( int st );
   inline int getStatus() const { return st; }
   inline void  setVMRunning( VM *vm ) { vmRunning = vm; }
-  inline Node* getNodeRunning() const { return vmRunning->getNodeRunning(); }
-  inline int   getNodeRunningId() const { return vmRunning->getNodeRunningId(); }
+  inline Node* getNodeRunning() const { return vmRunning->getRunningNode(); }
+  inline int   getNodeRunningId() const { return vmRunning->getRunningNodeId(); }
   inline VM*   getVMRunning() const { return vmRunning; }
   inline int   getId() const { return taskId; }
   inline int   getNbInstructions() const { return botAttr[nbInstructions]; }
