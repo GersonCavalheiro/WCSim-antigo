@@ -34,7 +34,7 @@ BoTReadyEv::~BoTReadyEv() {
 }
 
 void BoTReadyEv::execute() {
-  cout << "[" << getDate() << "] " << "BoT(" << bot->getIId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Node(" << bot->getSourceNodePtr()->getName() << ") ready." << endl;
+  cout << "[" << getDate() << "] " << "BoT(" << bot->getId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Node(" << bot->getSourceNodePtr()->getName() << ") ready." << endl;
   bot->launch();
 }
 
@@ -43,14 +43,14 @@ BoTCompletedEv::BoTCompletedEv( BoT *bot ) : Event(GlobalClock::get(), 3), bot(b
 }
 
 void BoTCompletedEv::execute() {
-  cout << "[" << getDate() << "] " << "BoT(" << bot->getIId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Node(" << bot->getSourceNodePtr()->getName() << ") finish." << endl;
+  cout << "[" << getDate() << "] " << "BoT(" << bot->getId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Node(" << bot->getSourceNodePtr()->getName() << ") finish." << endl;
   vector<BoT*> succ = bot->getSuccessorsL();
   for( auto it = succ.begin() ; it != succ.end() ; ++it )
     (*it)->dependenceSatisfied();
 }
 
 string BoTCompletedEv::eventName() {
-  return to_string(GlobalClock::get())+string(": BoT(")+to_string(bot->getIId())+") completed.";
+  return to_string(GlobalClock::get())+string(": BoT(")+to_string(bot->getId())+") completed.";
 }
 
 BoTCompletedEv::~BoTCompletedEv() {
@@ -117,26 +117,7 @@ TaskFinishEv::~TaskFinishEv() {
 }
 
 void TaskFinishEv::execute() {
-  task->setStatus(completed);
   task->getVMRunning()->popTask(task);
-  cout << "[" << getDate() << "] " << "Task(" << task->getId() << ") BoT(" << task->getBoT()->getIId() << ") finish." << endl;
+  cout << "[" << getDate() << "] " << "Task(" << task->getId() << ") BoT(" << task->getBoT()->getId() << ") finish." << endl;
 }
-
-/* ------------
-TaskReadyEv::TaskReadyEv( Task *task ) : Event(GlobalClock::get(),4), task(task) {
-  task->pushEvent(this);
-}
-
-TaskReadyEv::~TaskReadyEv() { 
-  task->popEvent();
-}
-
-void TaskReadyEv::execute() {
-  abort();
-  task->setStatus(completed);
-  task->getVMRunning()->popTask(task);
-  cout << "[" << getDate() << "] " << "Task(" << task->getId() << ") ready." << endl;
-}
-
-  ---------------- */
 

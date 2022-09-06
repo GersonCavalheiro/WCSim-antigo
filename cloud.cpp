@@ -10,7 +10,8 @@
 vector<vector<int>> Cloud::link;
 
 Node* Cloud::newNode( const string name, const int id, const int risingDate, const int bmFamily ) {
-  return new Node(name, id, risingDate, bmFamily);
+  // O parametro bmFamily permite escolher qual classe Node usar
+  return new Node(name, id, risingDate);
 }
 
 void Cloud::readCloudFile( string cloudFileName ) {

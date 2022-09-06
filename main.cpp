@@ -45,6 +45,9 @@ int main() {
 
   cout << "++++++\n";
   cout << "Global::Clock: " << GlobalClock::get() << endl;
+  cout << "Tasks - Total: " << Task::getNbTasks() << ", Running: "
+       << Task::getRunningTasks() << ", Completed: "
+       << Task::getCompletedTasks() << endl;
 
 
   return 0;

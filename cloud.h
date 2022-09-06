@@ -22,17 +22,14 @@ public:
   static inline int getLinkSpeed( int source, int destination ) { return bandwidth(source,destination); }
   static int getLinkSpeed( int source, vector<int>& vSpeeds );
   static void deploy();
-  static void printAllLinks();
   static int  bandwidth(int source, int destination);
-  /*static bool isOnline(int id) {
-   for( auto it = nodesL.begin() ; it != nodesL.end() ; ++it )
-      if( (*it)->getId() == id ) return true;
-   return false; }*/
+  static inline Node* getNodePtrById( int nodeId )  { return Node::getNodePtrById( nodeId ); }
+
+  static inline int uncompletedTasks() { return Task::getNbTasks() - Task::getCompletedTasks(); }
+
+  static void printAllLinks();
   static void printAllCloud();
-
-  inline static Node* getNodePtrById( int nodeId )  { return Node::getNodePtrById( nodeId ); }
-
 };
 
 #endif
-
+ 

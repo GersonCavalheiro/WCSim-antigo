@@ -11,7 +11,7 @@
 #include "virtualmachine.h"
 #include "component.h"
 
-class Node : public Component {
+class Node : public BareMetal, public Component {
   static map<int,Node*>    nodesListById;
   static map<string,Node*> nodesListByName;
   static int nodeCount;
@@ -20,15 +20,13 @@ class Node : public Component {
   int nbCores;
   int id, iId, risingDate, status;
   string nodeName;
-  BareMetal *bm;
 
 public:
-  Node( const string name, const int id, const int risingDate, const int bmFamily );
+  Node( const string name, const int id, const int risingDate );
   inline int    getId()               const { return id; }
   inline int    getIId()              const { return iId; }
   inline int    getNodeNb(int nodeId) const
     { return nodesListById[nodeId]->getIId(); }
-  inline int    getSpeed()            const { return bm->getSpeed(); }
   inline int    getRisingDate()       const { return risingDate; }
   inline int    getStatus()           const { return status; }
   inline bool   isOnline()            const { return status == online; }
@@ -39,8 +37,7 @@ public:
   void pushVM( vector<VM*>& vmPool );
   void pushVM( VM* vm );
 
-  inline void catchCore() { bm->pinCore(); }
-  inline void throwCore() { bm->releaseCore(); }
+  void updateSpeed();
 
   static inline bool isActive( int nodeId )
     { return nodesListById.find(nodeId) != nodesListById.end(); }

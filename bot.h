@@ -39,7 +39,7 @@ public:
   void launch();
   inline vector<int>& getBoTAttr() { return initialAttribs; }
   inline STATUS getStatus() const { return status; }
-  inline int getIId() const { return botIId; }
+  inline int getId() const { return botIId; }
   inline int getArrivalDate() const { return initialAttribs[arrivalBoT]; }
   inline int getPriority() const { return initialPriority; }
   inline int getNbTasks() const { return initialAttribs[nbTasks]; }
@@ -62,7 +62,7 @@ public:
   inline int  getBoTId() const { return initialAttribs[botId]; }
   inline int  getDependence( int d ) const { return initialAttribs[firstDepend+d]; }
   inline void setDependence( BoT* b ) { successors.push_back(b); }
-  inline void setReady() { status = ready; }
+  inline void setReady() { status = ready_t; }
 
   static void extractBoTAttributes(vector<int>& attr, string& strIn );
   static void buildBoT( string& attribs );

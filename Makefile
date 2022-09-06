@@ -11,7 +11,7 @@ EXEC = main
 main : $(OBJS)
 	$(CC) -o $(NAME) $^ 
 
-%.o : %.cpp $(INCLUDES)
+%.o : %.cpp $(INCLUDES) Makefile
 	$(CC) -c $(CFLAGS) $< -o $@
 
 git:

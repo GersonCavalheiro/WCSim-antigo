@@ -45,12 +45,7 @@ User::User( string name, int id, int node, int userLoginDate, int nbVMs, int vmF
 bool User::rentNewVMs( int n ) {
   if( n <= 0 ) return false;
   for( ; n > 0 ; --n ) {
-#ifdef THINVM
     auto vm = VM::createNewVM(myHostNode,this);
-#endif
-#ifndef THINVM
-    auto vm = VM::createNewVM(FatInstance(),myHostNode,this);
-#endif
     myVMPool.push_back(vm);
   }
   return true;

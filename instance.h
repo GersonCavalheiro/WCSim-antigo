@@ -26,8 +26,11 @@ public:
   int  getRunningNodeId();
   virtual inline int  getVCores() const { return vCores; }
   virtual inline int  getNominalMips() const { return vMips; }
-  virtual inline int  getVMips() const { return observedMips; }
+  virtual inline int  getVMips() const { return vMips; }
+  virtual inline int  getObservedMips() const { return observedMips; }
+  virtual inline void setObservedMips( int nMips ) { observedMips = nMips; }
   virtual inline int  getVRam() const { return vRam; }
+
 
   virtual void place( Task *t );
   virtual void unplace( Task *t );
@@ -42,7 +45,7 @@ public:
 
 class FatInstance : public Instance {
 public:
-  FatInstance( Node *n, int vCores = 4, int vMips = 1000, int vRam = 16 ) 
+  FatInstance( Node *n, int vCores = 16, int vMips = 1000, int vRam = 16 ) 
      : Instance( n, vCores, vMips, vRam ) {}
 };
 

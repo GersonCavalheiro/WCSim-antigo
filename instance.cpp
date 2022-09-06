@@ -4,14 +4,16 @@
 
 void Instance::place( Task *t ) {
   occupedVRam += t->getRam();
-  if( nbTasks < vCores ) running->catchCore();
+  if( nbTasks < vCores ) running->pinCore();
   ++nbTasks;
+  observedMips = running->getObservedSpeed();
 }
 
 void Instance::unplace( Task *t ) {
   occupedVRam -= t->getRam();
-  if( nbTasks <= vCores ) running->throwCore();
+  if( nbTasks <= vCores ) running->releaseCore();
   --nbTasks;
+  observedMips = running->getObservedSpeed();
 }
 
 bool Instance::fitRam( Task *t ) { return (vRam-occupedVRam) >= t->getRam(); }

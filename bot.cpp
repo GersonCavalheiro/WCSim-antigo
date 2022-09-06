@@ -25,7 +25,7 @@ int          BoT::botCount = 0;
 BoT::BoT(vector<int>& attr) : initialAttribs(attr) {
   botIId = botCount++;
   botsL.push_back(this);
-  status = waiting;
+  status = waiting_t;
   initialPriority = 0;
   nbRunningTasks = nbCompletedTasks = 0;
   currentDependences = initialAttribs[nDependBoT];
@@ -39,20 +39,23 @@ BoT::BoT(vector<int>& attr) : initialAttribs(attr) {
 }
 
 void BoT::aTaskCompleted() {
+  cout << "BoT("<<getId()<<") a task completed\n";
   ++nbCompletedTasks;
   --nbRunningTasks;
   if( nbCompletedTasks == initialAttribs[nbTasks] ) {
+    cout << "BoT("<<getId()<<") solving dependences\n";
     new BoTCompletedEv(this);
   }
 }
 
 void BoT::dependenceSatisfied() {
+  cout << "Satisfazendo dependencias: " << currentDependences << endl;
   if( --currentDependences > 0 ) return;
   new BoTReadyEv(this);
 }
 
 void BoT::launch() {
-  status = running;
+  status = running_t;
   nbRunningTasks = tasksL.size();
   //owner->schedule(tasksL,VMSchedule::selectVMByNbTasks);
   Scheduler::scheduleTaskOnVM(tasksL,*owner,VMSchedule::selectVMByNbTasks);

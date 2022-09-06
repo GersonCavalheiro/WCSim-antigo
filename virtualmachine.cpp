@@ -1,5 +1,5 @@
-#include <iostream> 
-#include <vector> 
+#include <iostream>
+#include <vector>
 #include "virtualmachine.h"
 #include "node.h"
 #include "task.h"
@@ -12,52 +12,70 @@ vector<VM*> VM::vmL;
 int VM::vmIdCounter = 0;
 
 VM::VM( Node* node, User* owner ) :
+#ifdef FATVM
+    FatInstance(node), owner(owner) {
+#elif THINVM
+    ThinInstance(node), owner(owner) {
+#else
     Instance(node), owner(owner) {
+#endif
   vmId = vmIdCounter++;
   vmL.push_back(this);
 }
 
 void VM::pushTask( Task *task ) {
+  cout << "PushTask : " << GlobalClock::get() << endl;
   this->place(task);
-  for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
-    if( *it == task ) { cout << "existe\n"; exit(0); }
+  task->setStatus(running_t);
 // ---- Setar fim da tarefa e atualizar fim de todas
   task->setDataStamp();
+  for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
+    if( *it == task ) { cout << "existe\n"; exit(0); }
   taskL.push_back(task);
-  if( taskL.size() <= this->getVCores() ) {
-   new TaskFinishEv( task, GlobalClock::get()+(float)task->getNbInstructions()/this->getVMips() );
-  } else {
-    // for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
-    //   ;;;
-   new TaskFinishEv( task,
-		     (int) GlobalClock::get()+
-		     ((float)task->getNbInstructions()/
-		     ((float)this->getVCores()*this->getVMips()/
-		     taskL.size())) );
-  }
-    
-// ----
+  this->avanceInstructions();
   ++runningTasks;
 }
 
 void VM::popTask( Task *task ) {
+  cout << "PopTask : " << GlobalClock::get() << endl;
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( *it == task ) {
+      --runningTasks;
+      task->setStatus(completed_t);
       this->unplace(task);
       taskL.erase(it);
-      --runningTasks;
-      return;
+      break;
     }
+  this->avanceInstructions();
 }
 
-//int VM::getNodeRunningId() const  { return running->getId(); }
-
+void VM::avanceInstructions() {
+  for( auto it = taskL.begin() ; it != taskL.end() ; ++it ) {
+    (*it)->avanceInstructions((GlobalClock::get()-(*it)->getDataStamp())                               *getObservedMips());
+    (*it)->setDataStamp();
+    if( (*it)->getRemainingInstructions() <= 0 ) {
+      new TaskFinishEv( *it, GlobalClock::get() );
+    }
+  }
+}
 
 int VM::getLoadNbInstructions() {
   int nbInstructions = 0;
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     nbInstructions += (*it)->getNbInstructions();
   return nbInstructions; 
+}
+
+void VM::setDeliveredSpeed( int bareMetalSpeed ) {
+  // Primeiro simula a execucao das tarefas considerando
+  // o ultimo speed delivered
+  this->avanceInstructions();
+  // Depois atualiza o speed para o proximo passo
+  cout << "Task.Size = " << taskL.size() << ", VCores = " << getVCores() << endl;
+  if( taskL.size() <= getVCores() )
+    setObservedMips( (getVMips() < bareMetalSpeed) ? getVMips()
+		                                   : bareMetalSpeed );
+  else setObservedMips(((float)(taskL.size()*bareMetalSpeed)/getVCores()));
 }
 
 VM* VM::createNewVM( Node* node, User* owner ) {

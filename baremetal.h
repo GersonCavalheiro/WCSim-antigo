@@ -17,14 +17,16 @@ public:
    *         unlimited storage  (INT_MAX TB)
    *         GPU non avalable   (false)
   */
-  BareMetal( int cores = 4, int speed = 10, int ram = 16, int storage = INT_MAX, bool gpu = false )
+  BareMetal( int cores = 4, int speed = 1000, int ram = 16, int storage = INT_MAX, bool gpu = false )
        : cores(cores), speed(speed),
          ram(ram*cores), storage(storage), gpu(gpu) {
     occupedRam = occupedCores = occupedStorage = 0;
+    observedSpeed = speed;
     pinnedGpu = false;
   }
   inline virtual int  getCores() const { return cores; }
   inline virtual int  getSpeed() const { return speed; }
+  inline virtual int  getObservedSpeed() const { return observedSpeed; }
   inline virtual int  getRam() const { return ram; }
   inline virtual bool getGPU() const { return false; }
   inline virtual int  getStorage() const { return storage; }
@@ -33,6 +35,7 @@ public:
   virtual void place( VM *vm );
   virtual void unplace( VM *vm );
   virtual bool fitRam( VM *vm );
+  virtual void updateSpeed() = 0;
 };
 
 #endif

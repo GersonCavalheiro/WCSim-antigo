@@ -16,14 +16,14 @@ using namespace std;
 class Task : public Component {
 private:
   static vector<Task*> tasksL;
-  static int taskCount;
+  static int taskCount, tasksRunning, tasksCompleted;
   vector<int> botAttr;
   STATUS st;
   int taskId, taskOwner, taskBoT, taskNode;
   BoT* myBoT;
   VM* vmRunning;
   int lastDataStamp, estimatedFinishDate;
-  int MiRemaining; // Amount of computation remaining
+  int miRemaining; // Amount of computation remaining
 
 public:
   Task( BoT* myBoT, vector<int>& botAttr );
@@ -40,7 +40,13 @@ public:
   inline BoT*  getBoT() const { return myBoT; }
   inline void  setDataStamp() { lastDataStamp = GlobalClock::get(); }
   inline int   getDataStamp() const { return lastDataStamp; }
+  inline int   getRemainingInstructions() const { return miRemaining; }
+  inline void  avanceInstructions( int mi ) { miRemaining -= mi; }
 
+  static inline int getNbTasks() { return taskCount; }
+  static inline int getRunningTasks() { return tasksRunning; }
+  static inline int getCompletedTasks() { return tasksCompleted; }
+  static void removeFromTaskList( Task *t );
   friend ostream& operator<<( ostream& out, const Task& t );
 };
 

@@ -12,16 +12,10 @@ map<int,Node*>    Node::nodesListById;
 map<string,Node*> Node::nodesListByName;
 int Node::nodeCount = 0;
 
-Node::Node( const string name, const int id, const int risingDate, const int bmFamily )
+Node::Node( const string name, const int id, const int risingDate )
      : nodeName(name), id(id), risingDate(risingDate) {
   iId = nodeCount++;
   
-  switch( bmFamily ) {
-    case 0 : bm = new BareMetal();
-             break;
-    default: cout << "Error. Only Baremetal 0 is implemented\n";
-             abort();
-  }
   insertNodeInLists(this);
   if( risingDate > GlobalClock::get() ) {
     status = offline;
@@ -36,15 +30,23 @@ void Node::insertNodeInLists( Node *n ) {
   nodesListByName.insert(pair<string,Node*>(n->getName(),n));
 }
 
+void Node::updateSpeed() {
+  for( auto it = vmL.begin() ; it != vmL.end() ; ++it ) 
+    (*it)->setDeliveredSpeed(getObservedSpeed());
+  cout << " -------------------- ***** ---------------\n";
+}
+	
 ostream& operator<<( ostream& out, Node& n ) {
   out << "[" << n.iId << "|" << n.id << "|" << n.nodeName << "]";
   return out;
 }
 
 void Node::printStatus() { 
-  cout << "Node: " << getName() << "/" << getId() << " has " << taskList.size()
+  cout << "Node: " << getName() << "/" << getId()
+       << " has " << taskList.size()
        << " ready tasks waiting to run" << endl;
-  for( list<Task*>::iterator it = taskList.begin() ; it != taskList.end() ; ++it )
+  for( list<Task*>::iterator it = taskList.begin() ;
+       it != taskList.end() ; ++it )
     cout << *(*it) << endl;
 }
 
@@ -55,10 +57,10 @@ Node* Node::getNodePtrById( int nodeId ) {
 }
 
 void Node::printAllNodes() {
-//  for( auto it = nodesListById.begin() ; it != nodesListById.end() ; ++it )
- //   cout << *it->second << endl;
-  cout << "S = " << nodesListByName.size() << "," << nodesListById.size() << endl;
-  for( auto it = nodesListByName.begin() ; it != nodesListByName.end() ; ++it )
+  cout << "S = " << nodesListByName.size() 
+       << "," << nodesListById.size() << endl;
+  for( auto it = nodesListByName.begin() ;
+       it != nodesListByName.end() ; ++it )
     cout << *it->second << endl;
 }
 
@@ -69,7 +71,7 @@ void Node::pushVM( vector<VM*>& vmL ) {
 }
 
 void Node::pushVM( VM *vm ) {
-  bm->place(vm);
+  this->place(vm);
   vmL.push_back(vm); 
 }
 

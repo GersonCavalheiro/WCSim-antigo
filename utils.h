@@ -35,12 +35,12 @@ enum ATTRIBS { botId = 0,   // unique BoT identificator
 /*
  * Estados para as Tasks e BoTs
 */
-enum STATUS { waiting = 0, // BoT: waiting the arrival time
-              ready,       // Task/BoT: ready for run
-              blocked,     // BoT: there are dependences not solved
-              running,     // Task/BoT: launched
-              completed,   // Task/BoT: completed
-              migrating    // BoT: migrating between nodes
+enum STATUS { waiting_t = 0, // BoT: waiting the arrival time
+              ready_t,       // Task/BoT: ready for run
+              blocked_t,     // BoT: there are dependences not solved
+              running_t,     // Task/BoT: launched
+              completed_t,   // Task/BoT: completed
+              migrating_t    // BoT: migrating between nodes
 };
 
 /*

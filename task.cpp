@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <iostream>
 
 #include "utils.h"
@@ -8,29 +7,53 @@
 
 vector<Task*> Task::tasksL;
 int           Task::taskCount = 0;
+int           Task::tasksRunning = 0;
+int           Task::tasksCompleted = 0;
 
 Task::Task( BoT *myBoT, vector<int>& botAttr ) : botAttr(botAttr), myBoT(myBoT) {
-  if( botAttr[nDependBoT] == 0 && botAttr[arrivalBoT] <= GlobalClock::get() ) st = ready;
-  if( botAttr[nDependBoT] == 0 && botAttr[arrivalBoT] > GlobalClock::get() )  st = waiting;
+  if( botAttr[nDependBoT] == 0 && botAttr[arrivalBoT] <= GlobalClock::get() ) this->setStatus(ready_t);
+  if( botAttr[nDependBoT] == 0 && botAttr[arrivalBoT] > GlobalClock::get() )  this->setStatus(waiting_t);
   taskId = taskCount++;
-  st = waiting;
+  this->setStatus(waiting_t);
   taskOwner = botAttr[ownerId];
   taskNode = botAttr[nodeId];
   taskBoT = botAttr[botId];
-  MiRemaining = botAttr[nbInstructions];
+  miRemaining = botAttr[nbInstructions];
   lastDataStamp = GlobalClock::get();
   tasksL.push_back(this);
 }
 
-//int Task::getNodeRunningId() const { return myVM.getNodeRunning->getId(); }
-
 void Task::setStatus( int st ) {
   if( this->st == st )
-    if( st == running ) cout << "Running!!!!!!!!!!!!!!!!!!!!!!!!: " << getId() << endl;
-    else if( st == completed ) cout << "Completed!!!!!!!!!!!!!!!!!!!!!!!!: " << getId() << endl;
+    if( st == running_t ) {
+      cout << "Running!!!!!!!!!!!!!!!!!!!!!!!!: " << getId() << endl;
+      abort();
+    }
+    else if( st == completed_t ) {
+      cout << "Completed!!!!!!!!!!!!!!!!!!!!!!: " << getId() << endl;
+      abort();
+    }
   this->st = (STATUS) st;
-  if( st == running ) myBoT->aTaskRunning();
-  if( st == completed ) myBoT->aTaskCompleted();
+  if( st == running_t ) { 
+    ++tasksRunning;
+    myBoT->aTaskRunning();
+  }
+  if( st == completed_t ) {
+    ++tasksCompleted;
+    --tasksRunning;
+    myBoT->aTaskCompleted();
+    Task::removeFromTaskList(this);
+  }
+}
+
+void Task::removeFromTaskList( Task *t ) {
+  for( auto it = tasksL.begin() ; it != tasksL.end() ; ++it )
+    if( t == *it ) {
+      tasksL.erase(it);
+      return;
+    }
+  cout << "Vou abortar" << endl;
+  abort();
 }
 
 ostream& operator<<( ostream& out, const Task& t ) {
