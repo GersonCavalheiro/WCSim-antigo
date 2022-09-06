@@ -2,6 +2,13 @@
 #include "node.h"
 #include "task.h"
 
+Instance::Instance( Node *n, int vCores, int vMips, int vRam)
+          : source(n), vCores(vCores), vMips(vMips), vRam(vRam),
+     running(n), nbTasks(0) {
+  observedMips = (vMips <= n->getObservedSpeed() ) ? vMips
+	         : n->getObservedSpeed();
+}
+
 void Instance::place( Task *t ) {
   occupedVRam += t->getRam();
   if( nbTasks < vCores ) running->pinCore();

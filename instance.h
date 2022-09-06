@@ -16,9 +16,7 @@ private:
   Node *source, *running; // launched, current location
 
 public:
-  Instance( Node *n, int vCores = 4, int vMips = 1000, int vRam = 16 ) :
-     source(n), vCores(vCores), vMips(vMips), vRam(vRam),
-     running(n), nbTasks(0) {} 
+  Instance( Node *n, int vCores = 4, int vMips = 1000, int vRam = 16 );
   inline void setSourceNode( Node *n ) { source = n; }
   inline Node *getSourceNode() const { return source; }
   inline void setRunningNode( Node *n ) { running = n; }
@@ -30,7 +28,7 @@ public:
   virtual inline int  getObservedMips() const { return observedMips; }
   virtual inline void setObservedMips( int nMips ) { observedMips = nMips; }
   virtual inline int  getVRam() const { return vRam; }
-
+  virtual inline string getName() const { return string("DefaultVM"); }
 
   virtual void place( Task *t );
   virtual void unplace( Task *t );
@@ -39,14 +37,16 @@ public:
 
 class ThinInstance : public Instance {
 public:
-  ThinInstance( Node *n, int vCores = 1, int vMips = 10, int vRam = 4 ) 
+  ThinInstance( Node *n, int vCores = 1, int vMips = 100000, int vRam = 4 ) 
      : Instance( n, vCores, vMips, vRam ) {}
+  inline string getName() const { return string("ThinVM"); }
 };
 
 class FatInstance : public Instance {
 public:
   FatInstance( Node *n, int vCores = 16, int vMips = 100000, int vRam = 16 ) 
      : Instance( n, vCores, vMips, vRam ) {}
+  inline string getName() const { return string("FatVM"); }
 };
 
 #endif

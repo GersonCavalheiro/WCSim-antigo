@@ -7,18 +7,13 @@ bool BareMetal::fitRam( VM *vm ) { return (ram-occupedRam) >= vm->getVRam(); }
 
 void BareMetal::pinCore() {
   if( ++occupedCores > cores ) {
-    //observedSpeed = (int)(((float)occupedCores*speed)/occupedCores);
-    observedSpeed = (int)(((float)cores*speed)/occupedCores);
-//    cout << "Observed Speed ========= " << observedSpeed << endl;
-    updateSpeed();
+    observedSpeed = (int)((float)speed*((float)cores/occupedCores));
   }
 }
 
 void BareMetal::releaseCore() {
   if( --occupedCores <= cores ) {
     observedSpeed = speed;
- //   cout << "Observed peed (original) ========= " << observedSpeed << endl;
-    updateSpeed();
   }
 }
 

@@ -75,7 +75,13 @@ void VM::setDeliveredSpeed( int bareMetalSpeed ) {
   if( taskL.size() <= getVCores() )
     setObservedMips( (getVMips() < bareMetalSpeed) ? getVMips()
 		                                   : bareMetalSpeed );
-  else setObservedMips(((float)(taskL.size()*bareMetalSpeed)/getVCores()));
+  else 
+    setObservedMips( (getVMips() < bareMetalSpeed)
+      ? (int)((float)(getVMips()*((float)getVCores()/taskL.size())))
+      : (int)((float)(bareMetalSpeed*((float)getVCores()/taskL.size())))
+      //? (int)((float)(getVMips()*((float)taskL.size()/getVCores())))
+      //: (int)((float)(bareMetalSpeed*((float)taskL.size()/getVCores())))
+      );
 }
 
 VM* VM::createNewVM( Node* node, User* owner ) {

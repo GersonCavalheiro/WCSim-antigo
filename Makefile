@@ -3,8 +3,8 @@ SOURCES = $(wildcard *.cpp)
 OBJS = $(SOURCES:.cpp=.o)
 INCLUDES = $(wildcard *.h)
 CC = g++
-CFLAGS = -std=c++17 -g -DFATVM
-%CFLAGS = -std=c++17 -g -DTHINVM
+%CFLAGS = -std=c++17 -g -DFATVM
+CFLAGS = -std=c++17 -g -DTHINVM
 %CFLAGS = -std=c++17 -ffast-math -march=native
 EXEC = main
 	
