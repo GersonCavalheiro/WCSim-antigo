@@ -45,7 +45,7 @@ public:
 
 class FatInstance : public Instance {
 public:
-  FatInstance( Node *n, int vCores = 16, int vMips = 1000, int vRam = 16 ) 
+  FatInstance( Node *n, int vCores = 16, int vMips = 100000, int vRam = 16 ) 
      : Instance( n, vCores, vMips, vRam ) {}
 };
 

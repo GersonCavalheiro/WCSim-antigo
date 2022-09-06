@@ -17,7 +17,7 @@ public:
    *         unlimited storage  (INT_MAX TB)
    *         GPU non avalable   (false)
   */
-  BareMetal( int cores = 4, int speed = 1000, int ram = 16, int storage = INT_MAX, bool gpu = false )
+  BareMetal( int cores = 4, int speed = 100000, int ram = 16, int storage = INT_MAX, bool gpu = false )
        : cores(cores), speed(speed),
          ram(ram*cores), storage(storage), gpu(gpu) {
     occupedRam = occupedCores = occupedStorage = 0;
