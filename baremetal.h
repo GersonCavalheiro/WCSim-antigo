@@ -2,12 +2,13 @@
 #define __baremetal_h__
 
 #include <climits>
+#include "component.h"
 #include "virtualmachine.h"
 
-class BareMetal {
+class BareMetal : public Component {
 private:
-  int  cores, speed, ram, storage, gpu;
-  int  occupedCores, observedSpeed, occupedRam, occupedStorage;
+  int  cores, mips, ram, storage, gpu;
+  int  occupedCores, occupedRam, occupedStorage;
   bool pinnedGpu;
 public:
   /* Default:
@@ -17,25 +18,38 @@ public:
    *         unlimited storage  (INT_MAX TB)
    *         GPU non avalable   (false)
   */
-  BareMetal( int cores = 4, int speed = 100000, int ram = 16, int storage = INT_MAX, bool gpu = false )
-       : cores(cores), speed(speed),
+  BareMetal( int cores = 4, int mips = 100000, int ram = 16, int storage = INT_MAX, bool gpu = false )
+       : cores(cores), mips(mips),
          ram(ram*cores), storage(storage), gpu(gpu) {
     occupedRam = occupedCores = occupedStorage = 0;
-    observedSpeed = speed;
     pinnedGpu = false;
   }
-  inline virtual int  getCores() const { return cores; }
-  inline virtual int  getSpeed() const { return speed; }
-  inline virtual int  getObservedSpeed() const { return observedSpeed; }
-  inline virtual int  getRam() const { return ram; }
-  inline virtual bool getGPU() const { return false; }
-  inline virtual int  getStorage() const { return storage; }
-  virtual void pinCore();
-  virtual void releaseCore();
+  inline virtual int   getCores() const
+                           { return cores; }
+  inline virtual int   getMips() const
+                           { return mips; }
+  inline virtual int   getRam() const
+                           { return ram; }
+  inline virtual bool  getGPU() const
+                           { return false; }
+  inline virtual int   getStorage() const
+                           { return storage; }
+  inline virtual float utilizationRate() const
+                           { return (cores >= occupedCores)
+				    ? 1.0
+				    : (float)cores/occupedCores; }
+  inline virtual int   getActualMips() const
+                           { return mips*this->utilizationRate(); }
+  inline virtual int   miDelivered(int t) const
+                           { return this->utilizationRate()*mips*t; }
+  virtual void pinCore()
+	          { ++occupedCores; }
+  virtual void releaseCore()
+	          { --occupedCores; }
   virtual void place( VM *vm );
   virtual void unplace( VM *vm );
   virtual bool fitRam( VM *vm );
-  virtual void updateSpeed() = 0;
+//  virtual void updateSpeed() = 0;
 };
 
 #endif

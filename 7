@@ -33,7 +33,7 @@ void VM::suspend() {
 
 void VM::resume() {
   this->setStatus(alive);
-  for( auto it = taskL.begin() ; it != taskL.end() ; ++it ) {
+  for( auto it = taskL.begin() ; it != taskL.end() ; ++it ) {7
     if( (*it)->getStatus() == blocked_t ) {
       (*it)->setStatus(running_t);
       (*it)->setDataStamp();

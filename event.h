@@ -48,11 +48,11 @@ public:
   string eventName() { return to_string(date)+string(": BoT ready"); }
 };
 
-class BoTCompletedEv : public Event {
+class BoTFinishEv : public Event {
   BoT* bot;
 public:
-  BoTCompletedEv( BoT* bot );
-  ~BoTCompletedEv();
+  BoTFinishEv( BoT* bot );
+  ~BoTFinishEv();
   void execute();
   string eventName();
 };

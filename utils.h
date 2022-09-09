@@ -44,6 +44,14 @@ enum STATUS { waiting_t = 0, // BoT: waiting the arrival time
 };
 
 /*
+ * Estados para as VMs e Nos
+*/
+enum VMSTATUS { alive = 0, // VM/Node is ready and running
+                suspended, // VM/Node is suspended (not running)
+                migrating  // VM is migrating among nodes
+};
+
+/*
  * Estados para o usuário
  */
 

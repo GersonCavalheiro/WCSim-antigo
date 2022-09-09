@@ -37,13 +37,15 @@ public:
   inline int   getId() const { return vmId; }
   inline User* getOwner() const { return owner; }
   inline int   getLoadNbTasks() { return taskL.size(); } 
-  void avanceInstructions();
+  void localSchedule();
   int  getLoadNbInstructions(); 
-
-  void setDeliveredSpeed( int bareMetalSpeed );
 
   void pushTask(Task* task);
   void popTask(Task* task);
+
+  void suspend();
+  void resume();
+  void migrate( int nodeId );
 
   friend ostream& operator<<( ostream& out, const VM& vm );
 };

@@ -44,7 +44,7 @@ void BoT::aTaskCompleted() {
   --nbRunningTasks;
   if( nbCompletedTasks == initialAttribs[nbTasks] ) {
     cout << "BoT("<<getId()<<") solving dependences\n";
-    new BoTCompletedEv(this);
+    new BoTFinishEv(this);
   }
 }
 

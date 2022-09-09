@@ -11,7 +11,7 @@
 #include "virtualmachine.h"
 #include "component.h"
 
-class Node : public BareMetal, public Component {
+class Node : public BareMetal {
   static map<int,Node*>    nodesListById;
   static map<string,Node*> nodesListByName;
   static int nodeCount;
@@ -37,7 +37,7 @@ public:
   void pushVM( vector<VM*>& vmPool );
   void pushVM( VM* vm );
 
-  void updateSpeed();
+  // void updateSpeed();
 
   static inline bool isActive( int nodeId )
     { return nodesListById.find(nodeId) != nodesListById.end(); }

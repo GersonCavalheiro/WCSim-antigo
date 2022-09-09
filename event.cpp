@@ -38,22 +38,22 @@ void BoTReadyEv::execute() {
   bot->launch();
 }
 
-BoTCompletedEv::BoTCompletedEv( BoT *bot ) : Event(GlobalClock::get(), 3), bot(bot) {
+BoTFinishEv::BoTFinishEv( BoT *bot ) : Event(GlobalClock::get(), 3), bot(bot) {
   bot->pushEvent(this);
 }
 
-void BoTCompletedEv::execute() {
+void BoTFinishEv::execute() {
   cout << "[" << getDate() << "] " << "BoT(" << bot->getId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Node(" << bot->getSourceNodePtr()->getName() << ") finish." << endl;
   vector<BoT*> succ = bot->getSuccessorsL();
   for( auto it = succ.begin() ; it != succ.end() ; ++it )
     (*it)->dependenceSatisfied();
 }
 
-string BoTCompletedEv::eventName() {
+string BoTFinishEv::eventName() {
   return to_string(GlobalClock::get())+string(": BoT(")+to_string(bot->getId())+") completed.";
 }
 
-BoTCompletedEv::~BoTCompletedEv() {
+BoTFinishEv::~BoTFinishEv() {
   bot->popEvent();
 }
 

@@ -71,7 +71,7 @@ void Simulator::run() {
     int soma = 0;
     auto vmL = VM::getVmList();
     for( auto it = vmL->begin() ; it != vmL->end() ; ++it ) {
-      (*it)->avanceInstructions();
+      (*it)->localSchedule();
       soma += (*it)->getLoadNbTasks();
     }
     if( !eventL.empty() && eventL.front()->getDate() != GlobalClock::get() )
