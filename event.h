@@ -12,6 +12,7 @@ class BoT;
 class User;
 class Task;
 class Node;
+class Instance;
 
 class Event {
 protected:
@@ -106,5 +107,24 @@ public:
   string eventName() { return to_string(date)+string(": Task Finish"); }
 };
  ---- */
+
+// -------- INSTANCE EVENTS 
+class InstanceSuspendEv : public Event {
+  Instance *vm;
+public:
+  InstanceSuspendEv( Instance *vm, int date );
+  ~InstanceSuspendEv();
+  void execute();
+  string eventName() { return to_string(date)+string(": Suspend Instance "); }
+};
+
+class InstanceResumeEv : public Event {
+  Instance *vm;
+public:
+  InstanceResumeEv( Instance *vm, int date );
+  ~InstanceResumeEv();
+  void execute();
+  string eventName() { return to_string(date)+string(": Resume Instance "); }
+};
 
 #endif

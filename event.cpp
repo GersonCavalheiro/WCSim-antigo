@@ -121,3 +121,26 @@ void TaskFinishEv::execute() {
   cout << "[" << getDate() << "] " << "Task(" << task->getId() << ") BoT(" << task->getBoT()->getId() << ") finish." << endl;
 }
 
+InstanceSuspendEv::InstanceSuspendEv( Instance *vm, int date ) : Event(date,0), vm(vm) {
+  vm->pushEvent(this);
+}
+
+InstanceSuspendEv::~InstanceSuspendEv() {
+  vm->popEvent();
+}
+
+void InstanceSuspendEv::execute() {
+  vm->suspend();
+}
+
+InstanceResumeEv::InstanceResumeEv( Instance *vm, int date ) : Event(date,0), vm(vm) {
+  vm->pushEvent(this);
+}
+
+InstanceResumeEv::~InstanceResumeEv() {
+  vm->popEvent();
+}
+
+void InstanceResumeEv::execute() {
+  vm->suspend();
+}

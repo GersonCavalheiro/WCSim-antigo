@@ -3,12 +3,14 @@
 #include <iostream> 
 #include <vector>
 
+#include "component.h"
+
 class Node;
 class Task;
 
 using namespace std;
 
-class Instance {
+class Instance : public Component {
 private:
   int vCores, vMips, vRam; // vMips, vRam per core
   int occupedVRam;
