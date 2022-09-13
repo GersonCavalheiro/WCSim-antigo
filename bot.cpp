@@ -39,17 +39,17 @@ BoT::BoT(vector<int>& attr) : initialAttribs(attr) {
 }
 
 void BoT::aTaskCompleted() {
-  cout << "BoT("<<getId()<<") a task completed\n";
+  //cout << "BoT("<<getId()<<") a task completed\n";
   ++nbCompletedTasks;
   --nbRunningTasks;
   if( nbCompletedTasks == initialAttribs[nbTasks] ) {
-    cout << "BoT("<<getId()<<") solving dependences\n";
+    //cout << "BoT("<<getId()<<") solving dependences\n";
     new BoTFinishEv(this);
   }
 }
 
 void BoT::dependenceSatisfied() {
-  cout << "Satisfazendo dependencias: " << currentDependences << endl;
+  //cout << "Satisfazendo dependencias: " << currentDependences << endl;
   if( --currentDependences > 0 ) return;
   new BoTReadyEv(this);
 }

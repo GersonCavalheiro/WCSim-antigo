@@ -22,7 +22,6 @@ public:
   } 
   static void update( int n, int t, float u ) {
     int p = (u < 2.0) ? (int) u/0.25 : 8;
-    cout << "U = " << u << " T = " << t << " N = " << n << endl;
     usage.find(n)->second[p] += t;
   }
   static void print();

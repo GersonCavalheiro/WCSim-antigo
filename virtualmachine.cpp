@@ -47,7 +47,7 @@ void VM::migrate( int nodeId ) {
 
 
 void VM::pushTask( Task *task ) {
-  cout << "PushTask : " << GlobalClock::get() << endl;
+  //cout << "PushTask : " << GlobalClock::get() << endl;
   this->place(task);
   task->setStatus(running_t);
 // ---- Setar fim da tarefa e atualizar fim de todas
@@ -60,7 +60,7 @@ void VM::pushTask( Task *task ) {
 }
 
 void VM::popTask( Task *task ) {
-  cout << "PopTask : " << GlobalClock::get() << endl;
+  //cout << "PopTask : " << GlobalClock::get() << endl;
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( *it == task ) {
       --runningTasks;
@@ -104,7 +104,7 @@ vector<VM*>* VM::createVMPool( int nbVMs, Node* node, User* owner ) {
 }
 
 void VM::printAllVMs() {
-  cout << "VM size: " << vmL.size() << endl;
+  //cout << "VM size: " << vmL.size() << endl;
   for( auto it = vmL.begin() ; it != vmL.end() ; ++it )
     cout << *(*it) << endl;
 }

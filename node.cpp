@@ -33,14 +33,6 @@ void Node::insertNodeInLists( Node *n ) {
   nodesListByName.insert(pair<string,Node*>(n->getName(),n));
 }
 
-/*
- void Node::updateSpeed() {
-  for( auto it = vmL.begin() ; it != vmL.end() ; ++it ) 
-    (*it)->setDeliveredSpeed(getObservedSpeed());
-  cout << " -------------------- ***** ---------------\n";
-}
-*/
-	
 ostream& operator<<( ostream& out, Node& n ) {
   out << "[" << n.iId << "|" << n.id << "|" << n.nodeName << "]";
   return out;

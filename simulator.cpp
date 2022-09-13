@@ -16,45 +16,6 @@ void Simulator::printAllEvents() {
     cout << "[" << i << "]" << *(*it) << endl;
 }
 
-/* run() {
-  Event *nEv;
-  int ant;
-
-  while( !eventL.empty() ) {
-    Event* ev = eventL.front();
-    eventL.pop_front();
-    GlobalClock::set(ev->getDate());
-    ev->execute();
-    delete(ev);
-
-    if( Cloud::uncompletedTasks() > 0 ) {
-      auto vmL = VM::getVmList();
-      for( auto it = vmL->begin() ; it != vmL->end() ; ++it )
-	(*it)->avanceInstructions();
-      }
-
-    cout << "Uncompleted tasks: " << Cloud::uncompletedTasks() << endl;
-   }
-
-   cout << "Finaleira\n";
-   while( Cloud::uncompletedTasks() > 0 ) {
-      cout << "uncompletedTasks: " << Cloud::uncompletedTasks() << endl;
-     GlobalClock::set(GlobalClock::get()+1);
-     auto vmL = VM::getVmList();
-     for( auto it = vmL->begin() ; it != vmL->end() ; ++it )
-       (*it)->avanceInstructions();
-     while( !eventL.empty() ) { 
-       Event* ev = eventL.front();
-       eventL.pop_front();
-       GlobalClock::set(ev->getDate());
-       ev->execute();
-       delete(ev);
-     }
-   } 
-
-   cout << "Uncompleted tasks: " << Cloud::uncompletedTasks() << endl;
-}
-*/
 void Simulator::run() {
   Event *nEv;
   int ant;
@@ -76,8 +37,6 @@ void Simulator::run() {
     }
     if( !eventL.empty() && eventL.front()->getDate() != GlobalClock::get() )
       GlobalClock::set(GlobalClock::get()+1);
-//    cout << "[" << GlobalClock::get() << "] Placed tasks: " << soma << " , "
-//         << Cloud::uncompletedTasks() << endl;
   }
 
   cout << "Uncompleted tasks: " << Cloud::uncompletedTasks() << endl;
