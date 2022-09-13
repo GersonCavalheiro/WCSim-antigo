@@ -42,6 +42,12 @@ User::User( string name, int id, int node, int userLoginDate, int nbVMs, int vmF
   }
 }
 
+void User::billing( int node, int nbInst ) {
+ auto it = invoice.find(node);
+  if( it == invoice.end() ) invoice.insert(pair<int,int>(node,nbInst));
+  else it->second += nbInst;
+}
+
 bool User::rentNewVMs( int n ) {
   if( n <= 0 ) return false;
   for( ; n > 0 ; --n ) {
@@ -113,4 +119,14 @@ void User::printAllUsers() {
 
 void User::onboarding() {
   User::readUserFile();
+}
+
+void User::charge() {
+  for( auto it = usersListById.begin() ; it != usersListById.end() ; ++it ) {
+    cout << "------------\n";
+    cout << "User :\t" << it->first << endl;
+    
+    for( auto iti = (it->second)->invoice.begin() ; iti != (it->second)->invoice.end() ; ++iti )
+      cout << "\t[" << iti->first << "," << iti->second << "]" << endl;
+  }
 }

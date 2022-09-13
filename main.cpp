@@ -18,6 +18,7 @@
 #include "event.h"
 #include "cloud.h"
 #include "simulator.h"
+#include "usage.h"
 
 using namespace std;
 
@@ -49,6 +50,9 @@ int main() {
        << Task::getRunningTasks() << ", Completed: "
        << Task::getCompletedTasks() << endl;
 
+  cout << "++++++\n";
+  Usage::print();
+  User::charge();
 
   return 0;
 }

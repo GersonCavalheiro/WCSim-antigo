@@ -7,6 +7,7 @@
 
 class Node;
 class Task;
+class User;
 
 using namespace std;
 
@@ -41,6 +42,8 @@ public:
                          { return vRam; }
   virtual inline string getName() const
                          { return string("DefaultVM"); }
+  virtual inline User* getOwner() const = 0;
+
 
   virtual void place( Task *t );
   virtual void unplace( Task *t );

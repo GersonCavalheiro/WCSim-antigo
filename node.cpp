@@ -7,6 +7,7 @@
 #include "utils.h"
 #include "baremetal.h"
 #include "task.h"
+#include "usage.h"
 
 map<int,Node*>    Node::nodesListById;
 map<string,Node*> Node::nodesListByName;
@@ -22,6 +23,8 @@ Node::Node( const string name, const int id, const int risingDate )
     new NodeRisingEv(this);
   }
   else status = online;
+
+  Usage::insert(getIId());
 }
 
 // Necessario pois é preciso que o nome do no ja tenha sido construido

@@ -16,6 +16,7 @@ using namespace std;
 class User : public Component {
   static map<int,User*>    usersListById;
   static map<string,User*> usersListByName;
+  map<int,int> invoice;
   static int userCount;
   string userName;
   int    userId, status, userNode, userLoginDate, nbVMs, vmFamily;
@@ -31,9 +32,12 @@ public:
   inline Node& getNode() const { return *myHostNode; }
   inline int getNodeId() const { return userNode; }
   inline vector<VM*>& getVMPool() { return myVMPool; }
-  void userLogin();
   inline bool getStatus() const { return status; }
   inline int getUserLoginDate() const { return userLoginDate; }
+  inline map<int,int>& getInvoice() { return invoice; }
+
+  void userLogin();
+  void billing(int node, int nbInst );
 
   friend ostream& operator<<( ostream& out, User& u );
 
@@ -49,6 +53,7 @@ public:
     if( it == usersListById.end() ) return false;
     else return usersListById[userId]->getStatus();
   }
+  static void charge();
 };
 
 #endif

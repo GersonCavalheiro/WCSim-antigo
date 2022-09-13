@@ -10,6 +10,7 @@
 #include "task.h"
 #include "virtualmachine.h"
 #include "component.h"
+#include "usage.h"
 
 class Node : public BareMetal {
   static map<int,Node*>    nodesListById;

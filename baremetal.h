@@ -4,11 +4,13 @@
 #include <climits>
 #include "component.h"
 #include "virtualmachine.h"
+#include "usage.h"
 
 class BareMetal : public Component {
 private:
   int  cores, mips, ram, storage, gpu;
   int  occupedCores, occupedRam, occupedStorage;
+  int  lastDataStamp;
   bool pinnedGpu;
 public:
   /* Default:
@@ -21,9 +23,11 @@ public:
   BareMetal( int cores = 4, int mips = 100000, int ram = 16, int storage = INT_MAX, bool gpu = false )
        : cores(cores), mips(mips),
          ram(ram*cores), storage(storage), gpu(gpu) {
-    occupedRam = occupedCores = occupedStorage = 0;
+    lastDataStamp = occupedRam = occupedCores = occupedStorage = 0;
     pinnedGpu = false;
   }
+  inline virtual int   getId() const = 0;
+  inline virtual int   getIId() const = 0;
   inline virtual int   getCores() const
                            { return cores; }
   inline virtual int   getMips() const
@@ -42,14 +46,28 @@ public:
                            { return mips*this->utilizationRate(); }
   inline virtual int   miDelivered(int t) const
                            { return this->utilizationRate()*mips*t; }
-  virtual void pinCore()
-	          { ++occupedCores; }
-  virtual void releaseCore()
-	          { --occupedCores; }
+  virtual void pinCore() {
+                  Usage::update(this->getIId(),
+				GlobalClock::get()-getDataStamp(),
+				(float)occupedCores/cores);
+	          ++occupedCores;
+		  setDataStamp();
+  }
+
+  virtual void releaseCore() {
+                  Usage::update(this->getIId(),
+				GlobalClock::get()-getDataStamp(),
+				(float)occupedCores/cores);
+	          --occupedCores;
+		  setDataStamp();
+  }
+
   virtual void place( VM *vm );
   virtual void unplace( VM *vm );
   virtual bool fitRam( VM *vm );
-//  virtual void updateSpeed() = 0;
+  void setDataStamp()
+	  { lastDataStamp = GlobalClock::get(); }
+  int  getDataStamp() { return lastDataStamp; }
 };
 
 #endif
