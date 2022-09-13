@@ -152,6 +152,6 @@ void BoT::makeBoTDependences() {
 }
 
 void BoT::load() {
-  BoT::readBoTFile("sipht.dob");
+  BoT::readBoTFile("input/sipht.dob");
   BoT::makeBoTDependences();
 }
