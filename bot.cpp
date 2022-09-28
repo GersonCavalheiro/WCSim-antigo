@@ -152,6 +152,7 @@ void BoT::makeBoTDependences() {
 }
 
 void BoT::load() {
-  BoT::readBoTFile("input/sipht.dob");
+  //BoT::readBoTFile("input/sipht.dob");
+  BoT::readBoTFile("input/ligo.dob");
   BoT::makeBoTDependences();
 }

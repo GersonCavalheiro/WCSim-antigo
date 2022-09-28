@@ -21,7 +21,8 @@ public:
     usage.insert(p);
   } 
   static void update( int n, int t, float u ) {
-    int p = (u < 2.0) ? (int) u/0.25 : 8;
+    if( t == 0 ) return;
+    int p = (u < 2.0) ? (int) (u/0.25) : 8;
     usage.find(n)->second[p] += t;
   }
   static void print();
