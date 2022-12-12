@@ -3,32 +3,32 @@
 #include <string>
 #include <vector>
 #include "cloud.h"
-#include "node.h"
+#include "host.h"
 #include "baremetal.h"
 #include "event.h"
 
 vector<vector<int>> Cloud::link;
 
-Node* Cloud::newNode( const string name, const int id, const int risingDate, const int bmFamily ) {
-  // O parametro bmFamily permite escolher qual classe Node usar
-  return new Node(name, id, risingDate);
+Host* Cloud::newHost( const string name, const int id, const int risingDate, const int bmFamily ) {
+  // O parametro bmFamily permite escolher qual classe Host usar
+  return new Host(name, id, risingDate);
 }
 
 void Cloud::readCloudFile( string cloudFileName ) {
   string name;
-  int nodeId, nodeRisingDate, bmFamily;
+  int hostId, hostRisingDate, bmFamily;
   std::ifstream infile(cloudFileName);
   cout << "Cloud file name: " << cloudFileName << endl;
 
   infile >> name;
   while( !infile.eof() ) {
-    infile >> nodeId >> nodeRisingDate >> bmFamily;
-    Cloud::newNode(name, nodeId, nodeRisingDate, bmFamily);
+    infile >> hostId >> hostRisingDate >> bmFamily;
+    Cloud::newHost(name, hostId, hostRisingDate, bmFamily);
     infile >> name;
   }
 }
 
-void Cloud::setLinkSpeeds( int node, string& speeds ) {
+void Cloud::setLinkSpeeds( int host, string& speeds ) {
   stringstream sIn;
   vector<int> auxv;
   string auxs;
@@ -36,7 +36,7 @@ void Cloud::setLinkSpeeds( int node, string& speeds ) {
 
   sIn << speeds;
 
-  for( int i = node+1 ; i <= Node::getNbNodes() ; ++i ) {
+  for( int i = host+1 ; i <= Host::getNbHosts() ; ++i ) {
     sIn >> auxs;
     if( !(stringstream(auxs) >> number) ) exit(0);
     auxv.push_back(number);
@@ -50,22 +50,22 @@ int Cloud::getLinkSpeed( int source, vector<int>& vSpeeds ) {
 }
 
 void Cloud::readNetworkFile( string networkFileName ) {
-  int node = 0;
+  int host = 0;
   string strIn, strOut;
   std::ifstream infile(networkFileName);
   cout << "Network file name: " << networkFileName << endl;
 
   std::getline(infile,strIn);
-  while( !infile.eof() && node < Node::getNbNodes() ) {
+  while( !infile.eof() && host < Host::getNbHosts() ) {
     strOut = extractAllIntegers(strIn);
-    if( strOut.size() != 0 ) setLinkSpeeds(node++,strOut);
+    if( strOut.size() != 0 ) setLinkSpeeds(host++,strOut);
     std::getline(infile,strIn);
   }
 }
 
 void Cloud::printAllLinks() {
-  for( int i = 0; i < Node::getNbNodes() ; ++i ) {
-    for( int j = 0; j < Node::getNbNodes() ; ++j ) 
+  for( int i = 0; i < Host::getNbHosts() ; ++i ) {
+    for( int j = 0; j < Host::getNbHosts() ; ++j ) 
       cout << Cloud::bandwidth(i,j) << "*";
     cout << endl;
   }
@@ -74,7 +74,7 @@ void Cloud::printAllLinks() {
 //inline void swap(int &a, int &b ){int aux=a;a=b;b=aux;}
 
 int Cloud::bandwidth( int line, int column ) {
-  if( line >= Node::getNbNodes() || column >= Node::getNbNodes() ) return 5;
+  if( line >= Host::getNbHosts() || column >= Host::getNbHosts() ) return 5;
   if( line == column ) return 0;
   if( line < column ) return link[line][column-1-line];
   else {std::swap(line,column); return link[line][column-1-line]; }
@@ -90,7 +90,7 @@ void Cloud::deploy() {
 
 void Cloud::printAllCloud() {
   cout << "****" << endl;
-  Node::printAllNodes();
+  Host::printAllHosts();
   cout << "****" << endl;
 }
 

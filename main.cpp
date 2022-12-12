@@ -14,7 +14,7 @@
 #include "virtualmachine.h"
 #include "user.h"
 #include "task.h"
-#include "node.h"
+#include "host.h"
 #include "event.h"
 #include "cloud.h"
 #include "simulator.h"
@@ -39,8 +39,6 @@ int main() {
   cout << "++++++\n";
   Cloud::printAllLinks();
   cout << "++++++\n";
-
-  Simulator::printAllEvents();
 
   Simulator::run();
 

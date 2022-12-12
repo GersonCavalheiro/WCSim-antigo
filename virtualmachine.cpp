@@ -1,7 +1,9 @@
 #include <iostream>
 #include <vector>
+#include <string.h>
+
 #include "virtualmachine.h"
-#include "node.h"
+#include "host.h"
 #include "task.h"
 #include "user.h"
 #include "instance.h"
@@ -11,14 +13,15 @@ using namespace std;
 vector<VM*> VM::vmL;
 int VM::vmIdCounter = 0;
 
-VM::VM( Node* node, User* owner ) :
+VM::VM( Host* host, User* owner ) :
 #ifdef FATVM
-    FatInstance(node), owner(owner) {
+    FatInstance(host), owner(owner) {
 #elif THINVM
-    ThinInstance(node), owner(owner) {
+    ThinInstance(host), owner(owner) {
 #else
-    Instance(node), owner(owner) {
+    Instance(host), owner(owner) {
 #endif
+  componentName = strdup(__func__);
   vmId = vmIdCounter++;
   vmL.push_back(this);
 }
@@ -41,8 +44,8 @@ void VM::resume() {
   }
 }
 
-void VM::migrate( int nodeId ) {
-  setRunningNode(Node::getNodePtrById(nodeId));
+void VM::migrate( int hostId ) {
+  setRunningHost(Host::getHostPtrById(hostId));
 }
 
 
@@ -91,14 +94,14 @@ int VM::getLoadNbInstructions() {
   return nbInstructions; 
 }
 
-VM* VM::createNewVM( Node* node, User* owner ) {
-  return new VM(node,owner);
+VM* VM::createNewVM( Host* host, User* owner ) {
+  return new VM(host,owner);
 }
 
-vector<VM*>* VM::createVMPool( int nbVMs, Node* node, User* owner ) {
+vector<VM*>* VM::createVMPool( int nbVMs, Host* host, User* owner ) {
   vector<VM*>* vmPool = new vector<VM*>();
 
-  for( ; nbVMs > 0 ; --nbVMs ) vmPool->push_back(new VM(node,owner));
+  for( ; nbVMs > 0 ; --nbVMs ) vmPool->push_back(new VM(host,owner));
 
   return vmPool;
 }
@@ -117,7 +120,7 @@ ostream& operator<<( ostream& out, vector<VM>& vms ) {
 
 ostream& operator<<( ostream& out, const VM& vm ) {
   out << "VM(" << vm.vmId << ")[" << vm.getOwner()->getId() << ","
-      << vm.getSourceNode()->getId() << "/" << vm.getRunningNode()->getId() << "]";
+      << vm.getSourceHost()->getId() << "/" << vm.getRunningHost()->getId() << "]";
   return out;
 }
 

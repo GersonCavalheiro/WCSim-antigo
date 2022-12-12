@@ -26,6 +26,7 @@ void Simulator::run() {
     if( !eventL.empty() && eventL.front()->getDate() == GlobalClock::get() ) {
       Event* ev = eventL.front();
       eventL.pop_front();
+      cout << *ev << endl;
       ev->execute();
       delete(ev);
     }
