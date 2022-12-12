@@ -20,13 +20,15 @@ class Host : public BareMetal {
   list<Task*> taskList; // Lista de tarefas prontas
   int nbCores;
   int id, iId, risingDate, status;
-  string hostName;
+  string nodeName, hostName;
   char *className;
 
 public:
   Host( const string name, const int id, const int risingDate );
   inline int    getId()               const { return id; }
   inline int    getIId()              const { return iId; }
+  inline string getName()             { return hostName; }
+  static string getName(int id)       { return hostsListById[id]->getName(); }
   inline int    getHostNb(int hostId) const
     { return hostsListById[hostId]->getIId(); }
   inline int    getRisingDate()       const { return risingDate; }

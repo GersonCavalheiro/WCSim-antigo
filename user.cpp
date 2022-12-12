@@ -21,8 +21,8 @@ int User::userCount = 0;
 map<int,User*>    User::usersListById;
 map<string,User*> User::usersListByName;
 
-User::User( string name, int id, int host, int userLoginDate, int nbVMs, int vmFamily )
-     : userName(name), userId(id), userHost(host), userLoginDate(userLoginDate),
+User::User( string name, int id, string node, int userLoginDate, int nbVMs, int vmFamily )
+     : userName(name), userId(id), userNode(node), userLoginDate(userLoginDate),
        nbVMs(nbVMs), vmFamily(vmFamily) {
   componentName = strdup(__func__);
   ++userCount;
@@ -52,6 +52,9 @@ void User::billing( int host, int nbInst ) {
 
 bool User::rentNewVMs( int n ) {
   if( n <= 0 ) return false;
+
+  // AQUI MAPEAMMENTO VMs 
+
   for( ; n > 0 ; --n ) {
     auto vm = VM::createNewVM(myHostHost,this);
     myVMPool.push_back(vm);
@@ -78,15 +81,15 @@ void User::userLogin() {
  * Read password file
    ------------------ */
 void User::readUserFile(string userFileName) {
-  string name;
-  int    userId, userHost, userLoginDate, nbVMs, vmFamily;
+  string name, userNode;
+  int    userId, userLoginDate, nbVMs, vmFamily;
 
   std::ifstream infile(userFileName);
   cout << "User file name: " << userFileName << endl;
   
   infile >> name;
   while( !infile.eof() ) {
-    infile >> userId >> userHost >> userLoginDate >> nbVMs >> vmFamily;
+    infile >> userId >> userNode >> userLoginDate >> nbVMs >> vmFamily;
     if( userIdTaken(userId) || userNameTaken(name) )
       cout << "[" << __LINE__ << "] User name (" << name << ") or user id ("
            << userId << ") already taken. Login fail." << endl;
@@ -94,7 +97,7 @@ void User::readUserFile(string userFileName) {
              && (Cloud::getHostPtrById(userHost)->isOnline() == false ) )
       cout << "[" << __LINE__ << "] User name (" << name << ") in host ("
            << userHost << "). The host is down. Login fail." << endl;
-    else new User(name, userId, userHost, userLoginDate, nbVMs, vmFamily);
+    else new User(name, userId, userNode, userLoginDate, nbVMs, vmFamily);
     infile >> name;
   }
 }

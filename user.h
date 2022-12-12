@@ -18,19 +18,20 @@ class User : public Component {
   static map<string,User*> usersListByName;
   map<int,int> invoice;
   static int userCount;
-  string userName;
-  int    userId, status, userHost, userLoginDate, nbVMs, vmFamily;
+  string userName, userNode;
+  int    userId, status, userLoginDate, nbVMs, vmFamily;
   vector<VM*> myVMPool;
   Host *myHostHost;
 
 public:
-  User( string name, int id, int host, int userLoginDate, int nbVMs, int vmFamily = 0 );
+  User( string name, int id, string node, int userLoginDate, int nbVMs, int vmFamily = 0 );
   bool rentNewVMs( int n = 1 );
   //void schedule( vector<Task*> &taskL );
   inline int getId() const { return userId; }
   inline string getName() const { return userName; }
+  inline string getNode() const { return userNode; }
   inline Host& getHost() const { return *myHostHost; }
-  inline int getHostId() const { return userHost; }
+  inline int getHostId() const { return 99; }
   inline vector<VM*>& getVMPool() { return myVMPool; }
   inline bool getStatus() const { return status; }
   inline int getUserLoginDate() const { return userLoginDate; }

@@ -59,6 +59,8 @@ enum VMSTATUS { alive = 0, // VM/Host is ready and running
 #define online  !offline
 
 string extractAllIntegers(string strIn);
+int atoi(char *str);
+char *itoa(int num, char *str, int base);
 
 /*
  * orderInsertPtrList
