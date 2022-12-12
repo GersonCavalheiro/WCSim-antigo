@@ -1,11 +1,13 @@
 #include "instance.h"
-#include "node.h"
+#include "host.h"
 #include "task.h"
 #include "user.h"
 
-Instance::Instance( Node *n, int vCores, int vMips, int vRam)
+int Instance::nbInstances = 0;
+
+Instance::Instance( Host *n, int vCores, int vMips, int vRam)
           : source(n), vCores(vCores), vMips(vMips), vRam(vRam),
-     running(n), nbTasks(0) { }
+     running(n), nbTasks(0) { id = nbInstances++; }
 
 void Instance::goHome() {
   this->migrate(source->getId());
@@ -28,7 +30,7 @@ void Instance::avanceTask( Task *t ) {
                     ? running->getActualMips()
                     : this->getVMips() * running->utilizationRate();
   int executed = actualMips * (GlobalClock::get() - t->getDataStamp());
-  t->avanceInstructions( executed );
+  t->hup( executed );
   this->getOwner()->billing(running->getId(),executed);
 }
 
@@ -36,20 +38,20 @@ bool Instance::fitRam( Task *t ) {
   return (vRam-occupedVRam) >= t->getRam();
 }
 
-int Instance::getRunningNodeId() {
+int Instance::getRunningHostId() {
   return running->getId();
 }
 
 /*
 void ThinInstance::avanceTask( Task *t ) {
   auto actualMips = 10;
-  t->avanceInstructions((GlobalClock::get() - t->getDataStamp())
+  t->hup((GlobalClock::get() - t->getDataStamp())
                         * actualMips);
 }
 
 void FatInstance::avanceTask( Task *t ) {
   auto actualMips = 1000;
-  t->avanceInstructions((GlobalClock::get() - t->getDataStamp())
+  t->hup((GlobalClock::get() - t->getDataStamp())
                         * actualMips);
 }
 */

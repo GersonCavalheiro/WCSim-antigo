@@ -6,7 +6,7 @@
 
 #include "utils.h"
 #include "bot.h"
-#include "node.h"
+#include "host.h"
 #include "virtualmachine.h"
 #include "globalclock.h"
 #include "component.h"
@@ -19,7 +19,7 @@ private:
   static int taskCount, tasksRunning, tasksCompleted;
   vector<int> botAttr;
   STATUS st;
-  int taskId, taskOwner, taskBoT, taskNode;
+  int taskId, taskOwner, taskBoT, taskHost;
   BoT* myBoT;
   VM* vmRunning;
   int lastDataStamp, estimatedFinishDate;
@@ -31,8 +31,8 @@ public:
   void setStatus( int st );
   inline int getStatus() const { return st; }
   inline void  setVMRunning( VM *vm ) { vmRunning = vm; }
-  inline Node* getNodeRunning() const { return vmRunning->getRunningNode(); }
-  inline int   getNodeRunningId() const { return vmRunning->getRunningNodeId(); }
+  inline Host* getHostRunning() const { return vmRunning->getRunningHost(); }
+  inline int   getHostRunningId() const { return vmRunning->getRunningHostId(); }
   inline VM*   getVMRunning() const { return vmRunning; }
   inline int   getId() const { return taskId; }
   inline int   getNbInstructions() const { return botAttr[nbInstructions]; }
@@ -42,7 +42,9 @@ public:
   inline void  setDataStamp() { lastDataStamp = GlobalClock::get(); }
   inline int   getDataStamp() const { return lastDataStamp; }
   inline int   getRemainingInstructions() const { return miRemaining; }
-  inline void  avanceInstructions( int mi ) { miRemaining -= mi; }
+  inline void  hup( int mi ) { miRemaining -= mi; }
+  inline void  suspend() { cout << "Not implemented. Line: " << __LINE__ << endl; }
+  inline void  resume() { cout << "Not implemented. Line: " << __LINE__ << endl; }
 
   static inline int getNbTasks() { return taskCount; }
   static inline int getRunningTasks() { return tasksRunning; }

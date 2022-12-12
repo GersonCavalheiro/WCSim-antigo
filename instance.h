@@ -5,7 +5,7 @@
 
 #include "component.h"
 
-class Node;
+class Host;
 class Task;
 class User;
 
@@ -13,27 +13,30 @@ using namespace std;
 
 class Instance : public Component {
 private:
+  static int nbInstances;
+  int id;
   int vCores, vMips, vRam; // vMips, vRam per core
   int occupedVRam;
   int nbTasks;
   int status;
-  Node *source, *running; // launched, current location
+  Host *source, *running; // launched, current location
 
 public:
-  Instance( Node *n, int vCores = 4, int vMips = 1000, int vRam = 16 );
-  inline void setSourceNode( Node *n )
+  Instance( Host *n, int vCores = 4, int vMips = 1000, int vRam = 16 );
+  inline int getId() { return id; }
+  inline void setSourceHost( Host *n )
                  { source = n; }
-  inline Node *getSourceNode() const
+  inline Host *getSourceHost() const
                  { return source; }
-  inline void setRunningNode( Node *n )
+  inline void setRunningHost( Host *n )
                  { running = n; }
-  inline Node *getRunningNode() const
+  inline Host *getRunningHost() const
                  { return running; }
   inline void setStatus( int st )
 	         { status = st; }
   inline int  getStatus()
 	         { return status; }
-  int  getRunningNodeId();
+  int  getRunningHostId();
   virtual inline int  getVCores() const
                          { return vCores; }
   virtual inline int  getVMips() const
@@ -51,13 +54,13 @@ public:
   virtual void avanceTask( Task *t );
   virtual void suspend() = 0;
   virtual void resume() = 0;
-  virtual void migrate( int nodeId ) = 0; 
+  virtual void migrate( int hostId ) = 0; 
   void goHome();
 };
 
 class ThinInstance : public Instance {
 public:
-  ThinInstance( Node *n, int vCores = 1, int vMips = 10, int vRam = 4 ) 
+  ThinInstance( Host *n, int vCores = 1, int vMips = 10, int vRam = 4 ) 
      : Instance( n, vCores, vMips, vRam ) {}
   inline string getName() const
                          { return string("ThinVM"); }
@@ -65,7 +68,7 @@ public:
 
 class FatInstance : public Instance {
 public:
-  FatInstance( Node *n, int vCores = 16, int vMips = 100, int vRam = 16 ) 
+  FatInstance( Host *n, int vCores = 16, int vMips = 100, int vRam = 16 ) 
      : Instance( n, vCores, vMips, vRam ) {}
   inline string getName() const
                          { return string("FatVM"); }

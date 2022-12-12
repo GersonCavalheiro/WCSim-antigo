@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
+#include <string.h>
 #include "event.h"
 #include "bot.h"
 #include "user.h"
 #include "cloud.h"
-#include "node.h"
+#include "host.h"
 #include "simulator.h"
 
 int Event::eventCount = 0;
@@ -20,12 +21,16 @@ bool operator<( const Event &e1, const Event &e2 ) { return e1.date < e2.date; }
 bool operator<=( const Event &e1, const Event &e2 ) { return e1.date <= e2.date; }
 
 ostream& operator<<( ostream& out, Event &e ) {
-  out << e.eventName() << "(" << e.eventId << "): " << e.getDate();
+  out << "[" << e.nameEv << "]" << e.eventName()
+      << "(" << e.eventId << "): " << e.getDate();
   return out;
 }
 
 // -------- BOT EVENTS 
 BoTReadyEv::BoTReadyEv( BoT *bot ) : Event(GlobalClock::get(), 3), bot(bot) {
+  nameEv = strdup(__func__);
+  nameComp = bot->getComponentName();
+  idComp   = bot->getId();
   bot->pushEvent(this);
 }
 
@@ -34,16 +39,19 @@ BoTReadyEv::~BoTReadyEv() {
 }
 
 void BoTReadyEv::execute() {
-  cout << "[" << getDate() << "] " << "BoT(" << bot->getId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Node(" << bot->getSourceNodePtr()->getName() << ") ready." << endl;
+  //cout << "[" << getDate() << "] " << "BoT(" << bot->getId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Host(" << bot->getSourceHostPtr()->getName() << ") ready." << endl;
   bot->launch();
 }
 
 BoTFinishEv::BoTFinishEv( BoT *bot ) : Event(GlobalClock::get(), 3), bot(bot) {
+  nameEv = strdup(__func__);
+  nameComp = bot->getComponentName();
+  idComp   = bot->getId();
   bot->pushEvent(this);
 }
 
 void BoTFinishEv::execute() {
-  cout << "[" << getDate() << "] " << "BoT(" << bot->getId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Node(" << bot->getSourceNodePtr()->getName() << ") finish." << endl;
+  //cout << "[" << getDate() << "] " << "BoT(" << bot->getId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Host(" << bot->getSourceHostPtr()->getName() << ") finish." << endl;
   vector<BoT*> succ = bot->getSuccessorsL();
   for( auto it = succ.begin() ; it != succ.end() ; ++it )
     (*it)->dependenceSatisfied();
@@ -60,12 +68,15 @@ BoTFinishEv::~BoTFinishEv() {
 // -------- USER EVENTS 
 UserLoginEv::UserLoginEv( User* user )
     : Event(user->getUserLoginDate(),2), user(user) {
+  nameEv = strdup(__func__);
+  nameComp = user->getComponentName();
+  idComp   = user->getId();
   user->pushEvent(this);
 }
 
 void UserLoginEv::execute() {
   user->userLogin();
-  cout << "[" << getDate() << "] " << "User(" << user->getName() << ") login." << endl;
+  ////cout << "[" << getDate() << "] " << "User(" << user->getName() << ") login." << endl;
 }
 
 UserLoginEv::~UserLoginEv() {
@@ -73,42 +84,51 @@ UserLoginEv::~UserLoginEv() {
 }
 
 // --------- NODE EVENTS
-NodeRisingEv::NodeRisingEv( Node* node ) : Event(node->getRisingDate(),0), node(node) {
-  node->pushEvent(this);
+HostRisingEv::HostRisingEv( Host* host ) : Event(host->getRisingDate(),0), host(host) {
+  nameEv = strdup(__func__);
+  nameComp = host->getComponentName();
+  idComp   = host->getId();
+  host->pushEvent(this);
 }
 
-NodeRisingEv::~NodeRisingEv() {
-  node->popEvent();
+HostRisingEv::~HostRisingEv() {
+  host->popEvent();
 }
 
-void NodeRisingEv::execute() {
-  node->setStatus(online);
-  cout << "[" << getDate() << "] " << "Node(" << node->getName() << ") Rising." << endl;
+void HostRisingEv::execute() {
+  host->setStatus(online);
+  //cout << "[" << getDate() << "] " << "Host(" << host->getName() << ") Rising." << endl;
 }
 
-string NodeRisingEv::eventName() {
-  return to_string(date)+string(": Node(")+node->getName()+string(") Rising.");
+string HostRisingEv::eventName() {
+  return to_string(date)+string(": Host(")+host->getName()+string(") Rising.");
 }
 
-NodeShutdownEv::NodeShutdownEv( Node* node ) : Event(GlobalClock::get(),0), node(node) {
-  node->pushEvent(this);
+HostShutdownEv::HostShutdownEv( Host* host ) : Event(GlobalClock::get(),0), host(host) {
+  nameEv = strdup(__func__);
+  nameComp = host->getComponentName();
+  idComp   = host->getId();
+  host->pushEvent(this);
 }
 
-NodeShutdownEv::~NodeShutdownEv() {
-  node->popEvent();
+HostShutdownEv::~HostShutdownEv() {
+  host->popEvent();
 }
 
-void NodeShutdownEv::execute() {
-  node->setStatus(offline);
-  cout << "[" << getDate() << "] " << "Node(" << node->getName() << ") Shutdown." << endl;
+void HostShutdownEv::execute() {
+  host->setStatus(offline);
+  //cout << "[" << getDate() << "] " << "Host(" << host->getName() << ") Shutdown." << endl;
 }
 
-string NodeShutdownEv::eventName() {
-  return to_string(date)+string(": Node")+node->getName()+string(") Shutdown.");
+string HostShutdownEv::eventName() {
+  return to_string(date)+string(": Host")+host->getName()+string(") Shutdown.");
 }
 
 // --------- TASK EVENTS
 TaskFinishEv::TaskFinishEv( Task *task, int date ) : Event(date,4), task(task) {
+  nameEv = strdup(__func__);
+  nameComp = task->getComponentName();
+  idComp   = task->getId();
   task->pushEvent(this);
 }
 
@@ -118,10 +138,13 @@ TaskFinishEv::~TaskFinishEv() {
 
 void TaskFinishEv::execute() {
   task->getVMRunning()->popTask(task);
-  cout << "[" << getDate() << "] " << "Task(" << task->getId() << ") BoT(" << task->getBoT()->getId() << ") finish." << endl;
+  //cout << "[" << getDate() << "] " << "Task(" << task->getId() << ") BoT(" << task->getBoT()->getId() << ") finish." << endl;
 }
 
 InstanceSuspendEv::InstanceSuspendEv( Instance *vm, int date ) : Event(date,0), vm(vm) {
+  nameEv = strdup(__func__);
+  nameComp = vm->getComponentName();
+  idComp   = vm->getId();
   vm->pushEvent(this);
 }
 
@@ -134,6 +157,9 @@ void InstanceSuspendEv::execute() {
 }
 
 InstanceResumeEv::InstanceResumeEv( Instance *vm, int date ) : Event(date,0), vm(vm) {
+  nameEv = strdup(__func__);
+  nameComp = vm->getComponentName();
+  idComp   = vm->getId();
   vm->pushEvent(this);
 }
 

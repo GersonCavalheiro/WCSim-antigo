@@ -11,13 +11,15 @@ using namespace std;
 class BoT;
 class User;
 class Task;
-class Node;
+class Host;
 class Instance;
 
 class Event {
 protected:
   static int eventCount;
-  int date, prior, eventId;
+  int   date, prior, eventId;
+  char *nameEv, *nameComp;
+  int   idComp;
 public:
   Event( int date = 0, int prior = 0 );
   virtual ~Event() { }
@@ -41,7 +43,7 @@ struct CompareEventsPtrs {
 // -------- BOT EVENTS 
 class BoTReadyEv : public Event {
   BoT *bot;
-  int  nodeId;
+  int  hostId;
 public:
   BoTReadyEv( BoT *bot );
   ~BoTReadyEv();
@@ -69,20 +71,20 @@ public:
 };
 
 // -------- NODE EVENTS 
-class NodeRisingEv : public Event {
-  Node *node;
+class HostRisingEv : public Event {
+  Host *host;
 public:
-  NodeRisingEv( Node* node );
-  ~NodeRisingEv();
+  HostRisingEv( Host* host );
+  ~HostRisingEv();
   void execute();
   string eventName();
 };
 
-class NodeShutdownEv : public Event {
-  Node *node;
+class HostShutdownEv : public Event {
+  Host *host;
 public:
-  NodeShutdownEv( Node* node );
-  ~NodeShutdownEv();
+  HostShutdownEv( Host* host );
+  ~HostShutdownEv();
   void execute();
   string eventName();
 };

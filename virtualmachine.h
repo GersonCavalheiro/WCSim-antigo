@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class Node;
+class Host;
 class User;
 class Task;
 
@@ -27,10 +27,10 @@ private:
   int runningTasks;
 
 public:
-  VM( Node* node, User* owner );
+  VM( Host* host, User* owner );
 
-  static VM* createNewVM( Node* node, User* owner );
-  static vector<VM*> *createVMPool( int nbVMs, Node *node, User *owner );
+  static VM* createNewVM( Host* host, User* owner );
+  static vector<VM*> *createVMPool( int nbVMs, Host *host, User *owner );
   static void printAllVMs();
   static inline vector<VM*> *getVmList() { return &vmL; }
 
@@ -45,7 +45,7 @@ public:
 
   void suspend();
   void resume();
-  void migrate( int nodeId );
+  void migrate( int hostId );
 
   friend ostream& operator<<( ostream& out, const VM& vm );
 };

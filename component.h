@@ -10,10 +10,13 @@ class Component {
   static vector<Component*> compsL;
   queue<Event*> eventsQ;
   int id;
+protected:
+  char *componentName;
 public:
   Component() { id = compCount++; compsL.push_back(this); }
   inline void   pushEvent( Event *ev ) { eventsQ.push(ev); }
   inline void   popEvent() { eventsQ.pop(); }
-  inline Event* inCurseEvent() { return eventsQ.front(); }
+  inline Event *inCurseEvent() { return eventsQ.front(); }
+  inline char  *getComponentName() { return componentName; }
 };
 #endif

@@ -6,13 +6,13 @@
 
 struct GlobalData {
 //  static vector<BoT> bot;
-  static vector<Node> cloud;
+  static vector<Host> cloud;
 //  vector<User> users;
   static list<Task*> taskList;
 };
 
 //vector<BoT> GlobalData::bot;
-vector<Node> GlobalData::cloud;
+vector<Host> GlobalData::cloud;
 list<Task*> GlobalData::taskList;
 
 #endif

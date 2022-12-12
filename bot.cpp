@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <string.h>
 
 #include "utils.h"
 #include "event.h"
@@ -23,6 +24,7 @@ vector<BoT*> BoT::botsL;
 int          BoT::botCount = 0;
 
 BoT::BoT(vector<int>& attr) : initialAttribs(attr) {
+  componentName = strdup(__func__);
   botIId = botCount++;
   botsL.push_back(this);
   status = waiting_t;
@@ -30,7 +32,7 @@ BoT::BoT(vector<int>& attr) : initialAttribs(attr) {
   nbRunningTasks = nbCompletedTasks = 0;
   currentDependences = initialAttribs[nDependBoT];
   owner       = User::getUserPtrById(initialAttribs[ownerId]);
-  sourceNode  = Node::getNodePtrById(owner->getNodeId());
+  sourceHost  = Host::getHostPtrById(owner->getHostId());
 
   for( int i = initialAttribs[nbTasks] ; i > 0 ; --i )
     tasksL.push_back(new Task(this, initialAttribs) );
@@ -68,7 +70,7 @@ ostream& operator<<( ostream& out, const BoT& b ) {
   if( b.successors.size() > 0 ) {
     out << " <- ( ";
     for( auto it = b.successors.begin() ; it != b.successors.end() ; ++it )
-      out << (*it)->getBoTId() << " ";
+      out << (*it)->getId() << " ";
     out << ")";
   }
   return out;
@@ -92,7 +94,7 @@ void BoT::extractBoTAttributes(vector<int>& attr, string& strIn ) {
   int number, i;
 
   sIn << strIn;
-  // Read first the fixed attributes: botId, ownerId, nodeId, nDependBoT,
+  // Read first the fixed attributes: botId, ownerId, hostId, nDependBoT,
   //                                  arrivalBoT, nbTasks,
   //                                  nbInstructions, memTask
   for( i = 0 ; i < nbOfAttrib ; ++i ) { 
@@ -119,7 +121,7 @@ void BoT::buildBoT( string& attribs ) {
             << attr[ownerId] << ") is offline" << endl;
 }
 
-void BoT::readBoTFile() {
+void BoT::readDoBFile() {
   string strIn, strOut;
   
   std::getline(cin,strIn);
@@ -147,7 +149,7 @@ void BoT::makeBoTDependences() {
   for( auto it = botsL.begin() ; it != botsL.end() ; ++it ) {
     int nb = (*it)->getNbDepend();
     int d = 0;
-    while( nb-- > 0 ) botsL[(*it)->getDependence(d++)]->setDependence(*it); 
+    while( nb-- > 0 ) botsL[(*it)->getDependence(d++)]->setSuccessor(*it); 
   }
 }
 

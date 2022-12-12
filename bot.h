@@ -18,7 +18,7 @@
 using namespace std;
 
 class User;
-class Node;
+class Host;
 
 class BoT : public Component {
   static vector<BoT*> botsL;
@@ -28,7 +28,7 @@ class BoT : public Component {
   vector<BoT*>  successors;
   vector<Task*> tasksL;
   User *owner;
-  Node *sourceNode;
+  Host *sourceHost;
   int currentDependences,
       initialPriority, // Para quando a prioridade for inserida
       nbRunningTasks,
@@ -39,15 +39,15 @@ public:
   void launch();
   inline vector<int>& getBoTAttr() { return initialAttribs; }
   inline STATUS getStatus() const { return status; }
-  inline int getId() const { return botIId; }
+  //inline int getIId() const { return botIId; }
   inline int getArrivalDate() const { return initialAttribs[arrivalBoT]; }
   inline int getPriority() const { return initialPriority; }
   inline int getNbTasks() const { return initialAttribs[nbTasks]; }
   inline int getNbDepend() const { return initialAttribs[nDependBoT]; }
-  inline int getNodeId() const { return initialAttribs[nodeId]; }
+  inline int getHostId() const { return initialAttribs[hostId]; }
   inline int getOwnerId() const { return initialAttribs[ownerId]; }
   inline User* getOwnerPtr() const { return owner; }
-  inline Node* getSourceNodePtr() const { return sourceNode; }
+  inline Host* getSourceHostPtr() const { return sourceHost; }
   inline int getNonConcludedDependences() const { return currentDependences; }
   inline void aTaskRunning() { ++nbRunningTasks; }
   inline vector<BoT*>& getSuccessorsL() { return successors; }
@@ -59,15 +59,15 @@ public:
       exit(0);
     }
   }
-  inline int  getBoTId() const { return initialAttribs[botId]; }
+  inline int  getId() const { return initialAttribs[botId]; }
   inline int  getDependence( int d ) const { return initialAttribs[firstDepend+d]; }
-  inline void setDependence( BoT* b ) { successors.push_back(b); }
+  inline void setSuccessor( BoT* b ) { successors.push_back(b); }
   inline void setReady() { status = ready_t; }
 
   static void extractBoTAttributes(vector<int>& attr, string& strIn );
   static void buildBoT( string& attribs );
   static void makeBoTDependences();
-  static void readBoTFile();
+  static void readDoBFile();
   static void readBoTFile( string botFileName );
   static void load();
   static void printAllBoTs();

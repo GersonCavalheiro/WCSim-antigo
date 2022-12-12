@@ -22,7 +22,7 @@ using namespace std;
 */
 enum ATTRIBS { botId = 0,   // unique BoT identificator
                ownerId,     // owner identifier
-               nodeId,      // node where the BoT was submitted
+               hostId,      // host where the BoT was submitted
                nDependBoT,  // number of dependences
                arrivalBoT,  // arrival time (steps)
                nbTasks,     // amount of tasks in the BoT
@@ -40,15 +40,15 @@ enum STATUS { waiting_t = 0, // BoT: waiting the arrival time
               blocked_t,     // BoT: there are dependences not solved
               running_t,     // Task/BoT: launched
               completed_t,   // Task/BoT: completed
-              migrating_t    // BoT: migrating between nodes
+              migrating_t    // BoT: migrating between hosts
 };
 
 /*
  * Estados para as VMs e Nos
 */
-enum VMSTATUS { alive = 0, // VM/Node is ready and running
-                suspended, // VM/Node is suspended (not running)
-                migrating  // VM is migrating among nodes
+enum VMSTATUS { alive = 0, // VM/Host is ready and running
+                suspended, // VM/Host is suspended (not running)
+                migrating  // VM is migrating among hosts
 };
 
 /*

@@ -19,25 +19,25 @@ class User : public Component {
   map<int,int> invoice;
   static int userCount;
   string userName;
-  int    userId, status, userNode, userLoginDate, nbVMs, vmFamily;
+  int    userId, status, userHost, userLoginDate, nbVMs, vmFamily;
   vector<VM*> myVMPool;
-  Node *myHostNode;
+  Host *myHostHost;
 
 public:
-  User( string name, int id, int node, int userLoginDate, int nbVMs, int vmFamily = 0 );
+  User( string name, int id, int host, int userLoginDate, int nbVMs, int vmFamily = 0 );
   bool rentNewVMs( int n = 1 );
   //void schedule( vector<Task*> &taskL );
   inline int getId() const { return userId; }
   inline string getName() const { return userName; }
-  inline Node& getNode() const { return *myHostNode; }
-  inline int getNodeId() const { return userNode; }
+  inline Host& getHost() const { return *myHostHost; }
+  inline int getHostId() const { return userHost; }
   inline vector<VM*>& getVMPool() { return myVMPool; }
   inline bool getStatus() const { return status; }
   inline int getUserLoginDate() const { return userLoginDate; }
   inline map<int,int>& getInvoice() { return invoice; }
 
   void userLogin();
-  void billing(int node, int nbInst );
+  void billing(int host, int nbInst );
 
   friend ostream& operator<<( ostream& out, User& u );
 

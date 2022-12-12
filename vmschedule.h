@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "user.h"
-#include "node.h"
+#include "host.h"
 #include "virtualmachine.h"
 #include "task.h"
 
