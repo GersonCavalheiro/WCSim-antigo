@@ -20,22 +20,17 @@ class VM : public Instance {
 #endif
 private:
   static vector<VM*> vmL;
-  static int vmIdCounter; // VM id counter
-  User *owner;            // VM owner
-  int   vmId;             // Unique VM id
   vector<Task*> taskL;    // Task placed over this VM
   int runningTasks;
 
 public:
-  VM( Host* host, User* owner );
+  VM(Node *node, User* owner);
 
-  static VM* createNewVM( Host* host, User* owner );
+  static VM* createNewVM(User* owner);
   static vector<VM*> *createVMPool( int nbVMs, Host *host, User *owner );
   static void printAllVMs();
   static inline vector<VM*> *getVmList() { return &vmL; }
 
-  inline int   getId() const { return vmId; }
-  inline User* getOwner() const { return owner; }
   inline int   getLoadNbTasks() { return taskL.size(); } 
   void localSchedule();
   int  getLoadNbInstructions(); 
@@ -47,7 +42,7 @@ public:
   void resume();
   void migrate( int hostId );
 
-  friend ostream& operator<<( ostream& out, const VM& vm );
+  friend ostream& operator<<( ostream& out, VM& vm );
 };
 
 #endif

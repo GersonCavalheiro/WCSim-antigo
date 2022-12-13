@@ -59,7 +59,6 @@ void BoT::dependenceSatisfied() {
 void BoT::launch() {
   status = running_t;
   nbRunningTasks = tasksL.size();
-  //Scheduler::scheduleTaskOnVM(tasksL,*owner,VMSelection::load);
   Scheduler::scheduleTaskOnVM(tasksL,*owner,VMSelection::random);
 }
 

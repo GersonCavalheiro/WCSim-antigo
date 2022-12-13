@@ -59,7 +59,7 @@ bool User::rentNewVMs( int n ) {
   // FIM
 
   for( ; n > 0 ; --n ) {
-    auto vm = VM::createNewVM(host,this);
+    auto vm = VM::createNewVM(this);
     myVMPool.push_back(vm);
   }
   return true;

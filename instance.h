@@ -6,6 +6,7 @@
 #include "component.h"
 
 class Host;
+class Node;
 class Task;
 class User;
 
@@ -19,15 +20,17 @@ private:
   int occupedVRam;
   int nbTasks;
   int status;
-  Host *source, *running; // launched, current location
+  User *owner;
+  Node *sourceNode;
+  Host *running; // launched, current location
 
 public:
-  Instance( Host *n, int vCores = 4, int vMips = 1000, int vRam = 16 );
+  Instance( Node *n, User *u, int vCores = 4, int vMips = 1000, int vRam = 16 );
   inline int getId() { return id; }
-  inline void setSourceHost( Host *n )
-                 { source = n; }
-  inline Host *getSourceHost() const
-                 { return source; }
+  inline void setSourceNode( Node *n )
+                 { sourceNode = n; }
+  inline Node *getSourceNode() const
+                 { return sourceNode; }
   inline void setRunningHost( Host *n )
                  { running = n; }
   inline Host *getRunningHost() const
@@ -36,6 +39,8 @@ public:
 	         { status = st; }
   inline int  getStatus()
 	         { return status; }
+  inline User *getOwner()
+                 { return owner; }
   int  getRunningHostId();
   virtual inline int  getVCores() const
                          { return vCores; }
@@ -45,7 +50,6 @@ public:
                          { return vRam; }
   virtual inline string getName() const
                          { return string("DefaultVM"); }
-  virtual inline User* getOwner() const = 0;
 
 
   virtual void place( Task *t );
@@ -60,16 +64,16 @@ public:
 
 class ThinInstance : public Instance {
 public:
-  ThinInstance( Host *n, int vCores = 1, int vMips = 10, int vRam = 4 ) 
-     : Instance( n, vCores, vMips, vRam ) {}
+  ThinInstance( Node *n, User *u, int vCores = 1, int vMips = 10, int vRam = 4 ) 
+     : Instance( n, u, vCores, vMips, vRam ) {}
   inline string getName() const
                          { return string("ThinVM"); }
 };
 
 class FatInstance : public Instance {
 public:
-  FatInstance( Host *n, int vCores = 16, int vMips = 100, int vRam = 16 ) 
-     : Instance( n, vCores, vMips, vRam ) {}
+  FatInstance( Node *n, User *u, int vCores = 16, int vMips = 100, int vRam = 16 ) 
+     : Instance( n, u, vCores, vMips, vRam ) {}
   inline string getName() const
                          { return string("FatVM"); }
 };

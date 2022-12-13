@@ -26,6 +26,7 @@ public:
   static vector<Host*>& getHostsList(string name);
   vector<Host*>& getHostsList();
   static Node *getNode(string name);
+  inline int getId() { return id; }
   Host *selectHost();
 };
 

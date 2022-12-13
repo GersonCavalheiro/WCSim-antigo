@@ -1,16 +1,21 @@
 #include "instance.h"
 #include "host.h"
+#include "node.h"
+#include "selectionsch.h"
 #include "task.h"
 #include "user.h"
 
 int Instance::nbInstances = 0;
 
-Instance::Instance( Host *n, int vCores, int vMips, int vRam)
-          : source(n), vCores(vCores), vMips(vMips), vRam(vRam),
-     running(n), nbTasks(0) { id = nbInstances++; }
+Instance::Instance( Node *n, User *u, int vCores, int vMips, int vRam)
+          : sourceNode(n), owner(u), vCores(vCores), vMips(vMips),
+	    vRam(vRam), nbTasks(0) {
+  id = nbInstances++;
+  running = HostSelection::random(*owner,*this);
+}
 
 void Instance::goHome() {
-  this->migrate(source->getId());
+  this->migrate(sourceNode->getId());
 }
 
 void Instance::place( Task *t ) {

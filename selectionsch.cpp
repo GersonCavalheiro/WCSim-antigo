@@ -46,11 +46,11 @@ VM* VMSelection::selectVMByNbInstructions( User& owner, Task& task ) {
   return vm;
 }
 
-Host* random( User& owner, Instance& vm ) {
+Host* HostSelection::random( User& owner, Instance& vm ) {
   vector<Host*>& hostsL = owner.getNode()->getHostsList();
   return hostsL[rand()%hostsL.size()];
 }
 
-Host* bestFit( User& owner, Instance& vm );
-Host* worstFit( User& owner, Instance& vm );
+Host* HostSelection::bestFit( User& owner, Instance& vm ) {}
+Host* HostSelection::worstFit( User& owner, Instance& vm ) {}
 
