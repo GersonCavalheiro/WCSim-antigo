@@ -13,8 +13,8 @@
 #include "globalclock.h"
 #include "simulator.h"
 #include "virtualmachine.h"
-#include "vmschedule.h"
 #include "node.h"
+#include "selectionsch.h"
 
 using namespace std;
 

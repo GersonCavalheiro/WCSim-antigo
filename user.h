@@ -31,7 +31,7 @@ public:
   //void schedule( vector<Task*> &taskL );
   inline int getId() const { return id; }
   inline string getName() const { return userName; }
-  inline string getNode() const { return userNodeName; }
+  inline Node *getNode() { return myNode; }
   //inline Host& getHost() const { return *myHostHost; }
   inline int getHostId() const { return 99; }
   inline vector<VM*>& getVMPool() { return myVMPool; }

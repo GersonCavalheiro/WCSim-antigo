@@ -38,14 +38,18 @@ void Node::popHost(Host *host) {
   abort();
 }
 
-vector<Host*>::iterator Node::getHostsList(string name) {
+vector<Host*>& Node::getHostsList(string name) {
   auto it = nodesM.find(name);
   
   if( it == nodesM.end() ) {
     cout << "Node \"" << name << "\" dont exists. Line: " << __LINE__ << endl;
     abort();
   }
-  return it->second->hostsL.begin();
+  return it->second->hostsL;
+}
+  
+vector<Host*>& Node::getHostsList() {
+  return hostsL;
 }
   
 Node *Node::getNode(string name) {
@@ -55,5 +59,8 @@ Node *Node::getNode(string name) {
 }
 
 Host *Node::selectHost() {
-  return *hostsL.begin();
+  auto it = hostsL.begin();
+  ++it;
+  return *it;
+  return *(hostsL.begin()++);
 }

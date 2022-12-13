@@ -16,7 +16,7 @@
 #include "user.h"
 #include "cloud.h"
 #include "scheduler.h"
-#include "vmschedule.h"
+#include "selectionsch.h"
 
 using namespace std;
 
@@ -59,8 +59,8 @@ void BoT::dependenceSatisfied() {
 void BoT::launch() {
   status = running_t;
   nbRunningTasks = tasksL.size();
-  //owner->schedule(tasksL,VMSchedule::selectVMByNbTasks);
-  Scheduler::scheduleTaskOnVM(tasksL,*owner,VMSchedule::selectVMByNbTasks);
+  //Scheduler::scheduleTaskOnVM(tasksL,*owner,VMSelection::load);
+  Scheduler::scheduleTaskOnVM(tasksL,*owner,VMSelection::random);
 }
 
 ostream& operator<<( ostream& out, const BoT& b ) {

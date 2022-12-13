@@ -23,7 +23,8 @@ public:
   static void pushHost(string name, Host *host);
   void pushHost(Host *host);
   static void popHost(Host *host);
-  vector<Host*>::iterator getHostsList(string name);
+  static vector<Host*>& getHostsList(string name);
+  vector<Host*>& getHostsList();
   static Node *getNode(string name);
   Host *selectHost();
 };
