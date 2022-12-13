@@ -14,6 +14,7 @@
 #include "simulator.h"
 #include "virtualmachine.h"
 #include "vmschedule.h"
+#include "node.h"
 
 using namespace std;
 
@@ -21,12 +22,12 @@ int User::userCount = 0;
 map<int,User*>    User::usersListById;
 map<string,User*> User::usersListByName;
 
-User::User( string name, int id, string node, int userLoginDate, int nbVMs, int vmFamily )
-     : userName(name), userId(id), userNode(node), userLoginDate(userLoginDate),
+User::User( string name, string node, int userLoginDate, int nbVMs, int vmFamily )
+     : userName(name), userNodeName(node), userLoginDate(userLoginDate),
        nbVMs(nbVMs), vmFamily(vmFamily) {
   componentName = strdup(__func__);
-  ++userCount;
-  usersListById.insert(pair<int,User*>(userId,this));
+  id = userCount++;
+  usersListById.insert(pair<int,User*>(id,this));
   usersListByName.insert(pair<string,User*>(userName,this));
 
   if( userLoginDate > GlobalClock::get() ) {
@@ -34,9 +35,9 @@ User::User( string name, int id, string node, int userLoginDate, int nbVMs, int 
     new UserLoginEv(this);
   }
   else {
-    myHostHost = Cloud::getHostPtrById(userHost);
-    if( myHostHost == NULL ) {
-      cout << "User(" << userName << ") login fail: Host(" << userHost << ") is down." << endl;
+    myNode = Cloud::getNode(userNodeName);
+    if( myNode == NULL ) {
+      cout << "User(" << userName << ") login fail: Node(" << userNodeName << ") is down." << endl;
       return;
     }
     rentNewVMs(nbVMs); 
@@ -53,10 +54,12 @@ void User::billing( int host, int nbInst ) {
 bool User::rentNewVMs( int n ) {
   if( n <= 0 ) return false;
 
-  // AQUI MAPEAMMENTO VMs 
+  // AQUI MAPEAMENTO VMs 
+  auto host = myNode->selectHost();
+  // FIM
 
   for( ; n > 0 ; --n ) {
-    auto vm = VM::createNewVM(myHostHost,this);
+    auto vm = VM::createNewVM(host,this);
     myVMPool.push_back(vm);
   }
   return true;
@@ -68,36 +71,34 @@ ostream& operator<<( ostream& out, User& u ) {
 }
 
 void User::userLogin() {
-  myHostHost = Cloud::getHostPtrById(userHost);
-  if( myHostHost == NULL ) {
-    cout << "User(" << userName << ") login fail: Host(" << userHost << ") is down." << endl;
-    return;
+  myNode = Cloud::getNode(userNodeName);
+  if( myNode == NULL ) {
+    cout << "User(" << userName << ") login fail: Node(" << userNodeName << ") is down." << endl;
+  } else {
+    rentNewVMs(nbVMs);
+    status = online;
   }
-  rentNewVMs(nbVMs);
-  status = online;
 }
 
 /* ------------------
  * Read password file
    ------------------ */
 void User::readUserFile(string userFileName) {
-  string name, userNode;
-  int    userId, userLoginDate, nbVMs, vmFamily;
+  string name, userNodeName;
+  int    userLoginDate, nbVMs, vmFamily;
 
   std::ifstream infile(userFileName);
   cout << "User file name: " << userFileName << endl;
   
   infile >> name;
   while( !infile.eof() ) {
-    infile >> userId >> userNode >> userLoginDate >> nbVMs >> vmFamily;
-    if( userIdTaken(userId) || userNameTaken(name) )
-      cout << "[" << __LINE__ << "] User name (" << name << ") or user id ("
-           << userId << ") already taken. Login fail." << endl;
-    else if( (Cloud::getHostPtrById(userHost) != NULL) // Atention: short circuit
-             && (Cloud::getHostPtrById(userHost)->isOnline() == false ) )
-      cout << "[" << __LINE__ << "] User name (" << name << ") in host ("
-           << userHost << "). The host is down. Login fail." << endl;
-    else new User(name, userId, userNode, userLoginDate, nbVMs, vmFamily);
+    infile >> userNodeName >> userLoginDate >> nbVMs >> vmFamily;
+    if( userNameTaken(name) )
+      cout << "[" << __LINE__ << "] User name (" << ") already taken. Login fail." << endl;
+    else if( Cloud::getNode(userNodeName) == NULL ) 
+      cout << "[" << __LINE__ << "] User name (" << name << ") in node ("
+           << userNodeName << "). The host is down. Login fail." << endl;
+    else new User(name, userNodeName, userLoginDate, nbVMs, vmFamily);
     infile >> name;
   }
 }

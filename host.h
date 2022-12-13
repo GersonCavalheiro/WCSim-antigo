@@ -19,18 +19,17 @@ class Host : public BareMetal {
   vector<VM*> vmL;
   list<Task*> taskList; // Lista de tarefas prontas
   int nbCores;
-  int id, iId, risingDate, status;
+  int id, risingDate, status;
   string nodeName, hostName;
   char *className;
 
 public:
-  Host( const string name, const int id, const int risingDate );
+  Host( const string name, const int risingDate );
   inline int    getId()               const { return id; }
-  inline int    getIId()              const { return iId; }
   inline string getName()             { return hostName; }
   static string getName(int id)       { return hostsListById[id]->getName(); }
   inline int    getHostNb(int hostId) const
-    { return hostsListById[hostId]->getIId(); }
+    { return hostsListById[hostId]->getId(); }
   inline int    getRisingDate()       const { return risingDate; }
   inline int    getStatus()           const { return status; }
   inline bool   isOnline()            const { return status == online; }

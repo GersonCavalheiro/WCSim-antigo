@@ -15,12 +15,12 @@ map<int,Host*>    Host::hostsListById;
 map<string,Host*> Host::hostsListByName;
 int Host::hostCount = 0;
 
-Host::Host( const string name, const int risingDate )
-     : nodeName(name), risingDate(risingDate) {
+Host::Host( const string name, const int id, const int risingDate )
+     : nodeName(name), id(id), risingDate(risingDate) {
   char aux[4];
   componentName = strdup(__func__);
-  id = hostCount++;
-  hostName = nodeName + "H" + itoa(id,aux,10);
+  iId = hostCount++;
+  hostName = nodeName + "H" + itoa(iId,aux,10);
 
   cout << "Numero: " << hostName << endl;
   
@@ -32,7 +32,7 @@ Host::Host( const string name, const int risingDate )
   }
   else status = online;
 
-  Usage::insert(getId());
+  Usage::insert(getIId());
 }
 
 // Necessario pois é preciso que o nome do no ja tenha sido construido
@@ -42,7 +42,7 @@ void Host::insertHostInLists( Host *n ) {
 }
 
 ostream& operator<<( ostream& out, Host& n ) {
-  out << "[" << n.id << "|" << n.hostName << "]";
+  out << "[" << n.iId << "|" << n.id << "|" << n.hostName << "]";
   return out;
 }
 

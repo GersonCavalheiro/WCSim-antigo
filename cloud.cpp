@@ -3,27 +3,32 @@
 #include <string>
 #include <vector>
 #include "cloud.h"
+#include "node.h"
 #include "host.h"
 #include "baremetal.h"
 #include "event.h"
 
 vector<vector<int>> Cloud::link;
 
-Host* Cloud::newHost( const string name, const int id, const int risingDate, const int bmFamily ) {
+Host* Cloud::newHost( const string name, const int risingDate, const int bmFamily ) {
   // O parametro bmFamily permite escolher qual classe Host usar
-  return new Host(name, id, risingDate);
+  return new Host(name, risingDate);
+}
+
+Node *Cloud::getNode(string name) {
+  return Node::getNode(name);
 }
 
 void Cloud::readCloudFile( string cloudFileName ) {
   string name;
-  int hostId, hostRisingDate, bmFamily;
+  int hostRisingDate, bmFamily;
   std::ifstream infile(cloudFileName);
   cout << "Cloud file name: " << cloudFileName << endl;
 
   infile >> name;
   while( !infile.eof() ) {
-    infile >> hostId >> hostRisingDate >> bmFamily;
-    Cloud::newHost(name, hostId, hostRisingDate, bmFamily);
+    infile >> hostRisingDate >> bmFamily;
+    Cloud::newHost(name, hostRisingDate, bmFamily);
     infile >> name;
   }
 }

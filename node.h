@@ -24,6 +24,8 @@ public:
   void pushHost(Host *host);
   static void popHost(Host *host);
   vector<Host*>::iterator getHostsList(string name);
+  static Node *getNode(string name);
+  Host *selectHost();
 };
 
 #endif

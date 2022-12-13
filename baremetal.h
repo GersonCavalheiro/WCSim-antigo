@@ -27,7 +27,6 @@ public:
     pinnedGpu = false;
   }
   inline virtual int   getId() const = 0;
-  inline virtual int   getIId() const = 0;
   inline virtual int   getCores() const
                            { return cores; }
   inline virtual int   getMips() const
@@ -47,7 +46,7 @@ public:
   inline virtual int   miDelivered(int t) const
                            { return this->utilizationRate()*mips*t; }
   virtual void pinCore() {
-                  Usage::update(this->getIId(),
+                  Usage::update(this->getId(),
 				GlobalClock::get()-getDataStamp(),
 				(float)occupedCores/cores);
 	          ++occupedCores;
@@ -55,7 +54,7 @@ public:
   }
 
   virtual void releaseCore() {
-                  Usage::update(this->getIId(),
+                  Usage::update(this->getId(),
 				GlobalClock::get()-getDataStamp(),
 				(float)occupedCores/cores);
 	          --occupedCores;

@@ -48,4 +48,12 @@ vector<Host*>::iterator Node::getHostsList(string name) {
   return it->second->hostsL.begin();
 }
   
-  
+Node *Node::getNode(string name) {
+  auto it = nodesM.find(name);
+  if( it == nodesM.end() ) return NULL;
+  return it->second;
+}
+
+Host *Node::selectHost() {
+  return *hostsL.begin();
+}

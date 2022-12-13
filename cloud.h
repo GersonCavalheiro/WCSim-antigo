@@ -14,7 +14,7 @@ class Cloud : public Component {
 public:
   // n: number of hosts
   // c: number of cores per host
-  static Host* newHost( const string name, const int id, const int risingDate, const int bmFamilly );
+  static Host* newHost( const string name, const int risingDate, const int bmFamilly );
 
   static void readCloudFile( string cloudFileName = "input/mycloud.cld");
   static void readNetworkFile( string networkFileName = "input/network.net");
@@ -29,6 +29,7 @@ public:
 
   static void printAllLinks();
   static void printAllCloud();
+  static Node *getNode(string name);
 };
 
 #endif
