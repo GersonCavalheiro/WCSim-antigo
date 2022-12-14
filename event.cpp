@@ -141,7 +141,7 @@ void TaskFinishEv::execute() {
   //cout << "[" << getDate() << "] " << "Task(" << task->getId() << ") BoT(" << task->getBoT()->getId() << ") finish." << endl;
 }
 
-InstanceSuspendEv::InstanceSuspendEv( Instance *vm, int date ) : Event(date,0), vm(vm) {
+InstanceSuspendEv::InstanceSuspendEv(Instance *vm, int date) : Event(date,0), vm(vm) {
   nameEv = strdup(__func__);
   nameComp = vm->getComponentName();
   idComp   = vm->getId();
@@ -156,7 +156,7 @@ void InstanceSuspendEv::execute() {
   vm->suspend();
 }
 
-InstanceResumeEv::InstanceResumeEv( Instance *vm, int date ) : Event(date,0), vm(vm) {
+InstanceResumeEv::InstanceResumeEv(Instance *vm, int date) : Event(date,0), vm(vm) {
   nameEv = strdup(__func__);
   nameComp = vm->getComponentName();
   idComp   = vm->getId();
@@ -170,3 +170,16 @@ InstanceResumeEv::~InstanceResumeEv() {
 void InstanceResumeEv::execute() {
   vm->suspend();
 }
+
+MigrationStartEv::MigrationStartEv(Node *node, int date) : Event(date,0), node(node) {
+  nameEv = strdup(__func__);
+  nameComp = node->getComponentName();
+  idComp   = node->getId();
+  node->pushEvent(this);
+}
+
+MigrationStartEv::~MigrationStartEv() {
+  node->popEvent();
+}
+
+void MigrationStartEv::execute() {}

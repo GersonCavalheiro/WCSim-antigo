@@ -4,7 +4,7 @@
 
 #include "utils.h"
 #include "task.h"
-#include "host.h"
+#include "node.h"
 #include "globalclock.h"
 
 vector<Task*> Task::tasksL;
@@ -19,7 +19,7 @@ Task::Task( BoT *myBoT, vector<int>& botAttr ) : botAttr(botAttr), myBoT(myBoT) 
   taskId = taskCount++;
   this->setStatus(waiting_t);
   taskOwner = botAttr[ownerId];
-  taskHost = botAttr[hostId];
+  taskNode = myBoT->getSourceNodePtr();
   taskBoT = botAttr[botId];
   miRemaining = botAttr[nbInstructions];
   lastDataStamp = GlobalClock::get();
@@ -61,7 +61,7 @@ void Task::removeFromTaskList( Task *t ) {
 
 ostream& operator<<( ostream& out, const Task& t ) {
   out << "(t" << t.taskId << ":" << t.taskBoT << "," << t.taskOwner
-      << "," << t.taskHost << ":" << t.botAttr[arrivalBoT] << ")";
+      << "," << t.taskNode->getId() << ":" << t.botAttr[arrivalBoT] << ")";
   return out;
 }
 

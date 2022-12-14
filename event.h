@@ -11,8 +11,9 @@ using namespace std;
 class BoT;
 class User;
 class Task;
-class Host;
 class Instance;
+class Host;
+class Node;
 
 class Event {
 protected:
@@ -127,6 +128,16 @@ public:
   ~InstanceResumeEv();
   void execute();
   string eventName() { return to_string(date)+string(": Resume Instance "); }
+};
+
+// -------- SCHEDULE EVENTS
+class MigrationStartEv : public Event {
+  Node *node; //Node launching migration
+public:
+  MigrationStartEv( Node *node, int date );
+  ~MigrationStartEv();
+  void execute();
+  string eventName() { return to_string(date)+string(": Migration Start "); }
 };
 
 #endif

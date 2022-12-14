@@ -31,6 +31,8 @@ public:
                            { return cores; }
   inline virtual int   getMips() const
                            { return mips; }
+  inline virtual float getRate() const
+                           { return getActualMips(); }
   inline virtual int   getRam() const
                            { return ram; }
   inline virtual bool  getGPU() const
@@ -45,19 +47,19 @@ public:
                            { return mips*this->utilizationRate(); }
   inline virtual int   miDelivered(int t) const
                            { return this->utilizationRate()*mips*t; }
-  virtual void pinCore() {
+  virtual void pinCore(int c = 1) {
                   Usage::update(this->getId(),
 				GlobalClock::get()-getDataStamp(),
 				(float)occupedCores/cores);
-	          ++occupedCores;
+	          occupedCores += c;
 		  setDataStamp();
   }
 
-  virtual void releaseCore() {
+  virtual void releaseCore(int c = 1) {
                   Usage::update(this->getId(),
 				GlobalClock::get()-getDataStamp(),
 				(float)occupedCores/cores);
-	          --occupedCores;
+	          occupedCores -= 1;
 		  setDataStamp();
   }
 

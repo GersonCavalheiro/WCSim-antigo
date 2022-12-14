@@ -22,7 +22,6 @@ using namespace std;
 */
 enum ATTRIBS { botId = 0,   // unique BoT identificator
                ownerId,     // owner identifier
-               hostId,      // host where the BoT was submitted
                nDependBoT,  // number of dependences
                arrivalBoT,  // arrival time (steps)
                nbTasks,     // amount of tasks in the BoT

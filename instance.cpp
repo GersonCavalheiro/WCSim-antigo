@@ -7,11 +7,13 @@
 
 int Instance::nbInstances = 0;
 
+// SCHEDULE
+//         VM PLACEMENT SELECTION
 Instance::Instance( Node *n, User *u, int vCores, int vMips, int vRam)
           : sourceNode(n), owner(u), vCores(vCores), vMips(vMips),
 	    vRam(vRam), nbTasks(0) {
   id = nbInstances++;
-  running = HostSelection::random(*owner,*this);
+  running = HostSelection::rate(*owner,*this);
 }
 
 void Instance::goHome() {

@@ -32,7 +32,7 @@ BoT::BoT(vector<int>& attr) : initialAttribs(attr) {
   nbRunningTasks = nbCompletedTasks = 0;
   currentDependences = initialAttribs[nDependBoT];
   owner       = User::getUserPtrById(initialAttribs[ownerId]);
-  sourceHost  = Host::getHostPtrById(owner->getHostId());
+  sourceNode  = owner->getNode();
 
   for( int i = initialAttribs[nbTasks] ; i > 0 ; --i )
     tasksL.push_back(new Task(this, initialAttribs) );
@@ -56,6 +56,8 @@ void BoT::dependenceSatisfied() {
   new BoTReadyEv(this);
 }
 
+// SCHEDULE:
+//          TASK PLACEMENT SELECTION
 void BoT::launch() {
   status = running_t;
   nbRunningTasks = tasksL.size();
@@ -93,7 +95,7 @@ void BoT::extractBoTAttributes(vector<int>& attr, string& strIn ) {
   int number, i;
 
   sIn << strIn;
-  // Read first the fixed attributes: botId, ownerId, hostId, nDependBoT,
+  // Read first the fixed attributes: botId, ownerId, nDependBoT,
   //                                  arrivalBoT, nbTasks,
   //                                  nbInstructions, memTask
   for( i = 0 ; i < nbOfAttrib ; ++i ) { 
@@ -154,6 +156,7 @@ void BoT::makeBoTDependences() {
 
 void BoT::load() {
   BoT::readBoTFile("input/sipht.dob");
+  //BoT::readBoTFile("input/sipht.dob");
   //BoT::readBoTFile("input/ligo.dob");
   BoT::makeBoTDependences();
 }

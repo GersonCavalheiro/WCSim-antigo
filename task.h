@@ -6,12 +6,13 @@
 
 #include "utils.h"
 #include "bot.h"
-#include "host.h"
 #include "virtualmachine.h"
 #include "globalclock.h"
 #include "component.h"
 
 using namespace std;
+
+class Node;
 
 class Task : public Component {
 private:
@@ -19,7 +20,8 @@ private:
   static int taskCount, tasksRunning, tasksCompleted;
   vector<int> botAttr;
   STATUS st;
-  int taskId, taskOwner, taskBoT, taskHost;
+  int taskId, taskOwner, taskBoT;
+  Node *taskNode;
   BoT* myBoT;
   VM* vmRunning;
   int lastDataStamp, estimatedFinishDate;

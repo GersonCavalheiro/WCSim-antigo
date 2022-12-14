@@ -31,9 +31,17 @@ void VM::suspend() {
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( (*it)->getStatus() == running_t )
       (*it)->setStatus(blocked_t);
+
+  getRunningHost()->releaseCore( (taskL.size() >= getVCores())
+		                 ? getVCores()
+		                 : taskL.size() );
 }
 
 void VM::resume() {
+  this->localSchedule();
+  getRunningHost()->pinCore( (taskL.size() >= getVCores())
+		             ? getVCores()
+		             : taskL.size() );
   this->setStatus(alive);
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it ) {
     if( (*it)->getStatus() == blocked_t ) {

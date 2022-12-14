@@ -9,16 +9,16 @@
 #include <vector>
 #include <map>
 
+#include "component.h"
 #include "utils.h"
 #include "event.h"
 #include "task.h"
 #include "simulator.h"
-#include "component.h"
+#include "node.h"
 
 using namespace std;
 
 class User;
-class Host;
 
 class BoT : public Component {
   static vector<BoT*> botsL;
@@ -28,7 +28,7 @@ class BoT : public Component {
   vector<BoT*>  successors;
   vector<Task*> tasksL;
   User *owner;
-  Host *sourceHost;
+  Node *sourceNode;
   int currentDependences,
       initialPriority, // Para quando a prioridade for inserida
       nbRunningTasks,
@@ -44,10 +44,10 @@ public:
   inline int getPriority() const { return initialPriority; }
   inline int getNbTasks() const { return initialAttribs[nbTasks]; }
   inline int getNbDepend() const { return initialAttribs[nDependBoT]; }
-  inline int getHostId() const { return initialAttribs[hostId]; }
+  inline int getNodeId() const { return sourceNode->getId(); }
   inline int getOwnerId() const { return initialAttribs[ownerId]; }
   inline User* getOwnerPtr() const { return owner; }
-  inline Host* getSourceHostPtr() const { return sourceHost; }
+  inline Node* getSourceNodePtr() const { return sourceNode; }
   inline int getNonConcludedDependences() const { return currentDependences; }
   inline void aTaskRunning() { ++nbRunningTasks; }
   inline vector<BoT*>& getSuccessorsL() { return successors; }

@@ -5,11 +5,13 @@
 #include <map>
 #include <string>
 
+#include "component.h"
+
 class Host;
 
 using namespace std;
 
-class Node {
+class Node : public Component {
   string name;
   int    id;
   static int nodeCount;

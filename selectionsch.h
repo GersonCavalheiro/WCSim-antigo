@@ -16,6 +16,8 @@ struct VMSelection {
 
 struct HostSelection {
   static Host* random( User& owner, Instance& vm );
+  static Host* circular( User& owner, Instance& vm );
+  static Host* rate( User& owner, Instance& vm );
   static Host* bestFit( User& owner, Instance& vm );
   static Host* worstFit( User& owner, Instance& vm );
 };

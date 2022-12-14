@@ -14,7 +14,6 @@ DAG OF BOT FILE (extension .dob)
 - The BoT attributes are (separated by spaces)
 -- idBoT
 -- ownerId
--- nodeId
 -- nDep
 -- arrival
 -- nTasks
@@ -27,7 +26,6 @@ DAG OF BOT FILE (extension .dob)
 -- idBoT: a symbol used to represent a BoT in this file
    helping the simulator to build an internal DAG representation
 -- ownerId: the unique user identifier (see PASSWD FILE)
--- nodeId: the unique node identifier (see INFRASTRUCTURE FILE)
 -- userLogin: login date
 -- nDep: if the execution of the BoT depends on the end
    of others, nDep corresponds to the number of dependences
