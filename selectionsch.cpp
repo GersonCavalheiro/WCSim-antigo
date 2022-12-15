@@ -7,6 +7,18 @@
 #include "virtualmachine.h"
 #include "task.h"
 
+VM *SchedulePolice::vmSelection( User& owner, Task& task ) {
+  return VMSelection::circular(owner,task);
+}
+
+Host *SchedulePolice::hostSelection( Node& node, Instance& vm ) {
+ return HostSelection::circular(node,vm);
+}
+
+Host *SchedulePolice::vmMigration( User& owner, Instance& vm ) {
+  return VMMigration::random(owner,vm);
+}
+
 VM* VMSelection::random( User& owner, Task& task ) {
   vector<VM*>& vmL = owner.getVMList();
   return vmL[rand()%vmL.size()];
@@ -56,23 +68,23 @@ VM* VMSelection::selectVMByNbInstructions( User& owner, Task& task ) {
   return vm;
 }
 
-Host* HostSelection::random( User& owner, Instance& vm ) {
-  vector<Host*>& hostsL = owner.getNode()->getHostsList();
+Host* HostSelection::random( Node& node, Instance& vm ) {
+  vector<Host*>& hostsL = node.getHostsList();
   return hostsL[rand()%hostsL.size()];
 }
 
-Host* HostSelection::circular( User& owner, Instance& vm ) {
+Host* HostSelection::circular( Node& node, Instance& vm ) {
   static int p = 0;
-  Host *choice = owner.getNode()->getHostsList()[p];
+  Host *choice = node.getHostsList()[p];
 
   ++p;
-  p = (p == owner.getNode()->getHostsList().size()) ? 0 : p;
+  p = (p == node.getHostsList().size()) ? 0 : p;
   
   return choice;
 }
 
-Host* HostSelection::rate( User& owner, Instance& vm ) {
-  vector<Host*>& hostsL = owner.getNode()->getHostsList();
+Host* HostSelection::rate( Node& node, Instance& vm ) {
+  vector<Host*>& hostsL = node.getHostsList();
   Host  *choice = *hostsL.begin();
   float  cRate   = choice->getRate();
 
@@ -89,6 +101,10 @@ Host* HostSelection::rate( User& owner, Instance& vm ) {
   return choice;
 }
 
-Host* HostSelection::bestFit( User& owner, Instance& vm ) { return (Host*) NULL; }
-Host* HostSelection::worstFit( User& owner, Instance& vm ) { return (Host*) NULL; }
+Host* HostSelection::bestFit( Node& node, Instance& vm ) { return (Host*) NULL; }
+Host* HostSelection::worstFit( Node& node, Instance& vm ) { return (Host*) NULL; }
+
+Host* VMMigration::random( User& owner, Instance& vm ) { return (Host*) NULL; }
+Host* VMMigration::circular( User& owner, Instance& vm ) { return (Host*) NULL; }
+
 

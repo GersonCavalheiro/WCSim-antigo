@@ -62,7 +62,7 @@ void BoT::dependenceSatisfied() {
 void BoT::launch() {
   status = running_t;
   nbRunningTasks = tasksL.size();
-  Scheduler::scheduleTaskOnVM(tasksL,*owner,VMSelection::circular);
+  Scheduler::scheduleTaskOnVM(tasksL,*owner,SchedulePolice::vmSelection);
 }
 
 ostream& operator<<( ostream& out, const BoT& b ) {

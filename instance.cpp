@@ -17,7 +17,8 @@ Instance::Instance( Node *n, User *u, int vCores, int vMips, int vRam)
 	    vRam(vRam), nbTasks(0) {
   id = nbInstances++;
   instanceL.push_back(this);
-  running = HostSelection::circular(*owner,*this);
+  //running = HostSelection::circular(*(owner->getNode()),*this);
+  running = SchedulePolice::hostSelection(*(owner->getNode()),*this);
   running->pushVM(this);
 }
 
