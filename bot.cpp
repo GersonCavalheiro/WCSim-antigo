@@ -20,13 +20,16 @@
 
 using namespace std;
 
-vector<BoT*> BoT::botsL;
-int          BoT::botCount = 0;
+vector<BoT*>  BoT::botsL;
+map<int,BoT*> BoT::botsM;
+int           BoT::botCount = 0;
 
 BoT::BoT(vector<int>& attr) : initialAttribs(attr) {
   componentName = strdup(__func__);
-  botIId = botCount++;
-  botsL.push_back(this);
+  botNum = botCount++;
+  id     = initialAttribs[botId];
+  //botsL.push_back(this);
+  botsM.insert({id,this});
   status = waiting_t;
   initialPriority = 0;
   nbRunningTasks = nbCompletedTasks = 0;
@@ -82,10 +85,19 @@ bool operator<(const BoT &b1, const BoT &b2 ) {
   return b1.getArrivalDate() < b2.getArrivalDate();
 }
   
+/*
 void BoT::printAllBoTs() {
   cout << "---\n";
   for( auto it = botsL.begin() ; it != botsL.end() ; ++it )
     cout << *(*it) << endl;
+  cout << "---\n";
+}
+*/
+
+void BoT::printAllBoTs() {
+  cout << "---\n";
+  for( auto it = botsM.begin() ; it != botsM.end() ; ++it )
+    cout << *((*it).second) << endl;
   cout << "---\n";
 }
 
@@ -146,11 +158,22 @@ void BoT::readBoTFile( string botFileName ) {
   }
 }
 
+/*
 void BoT::makeBoTDependences() {
   for( auto it = botsL.begin() ; it != botsL.end() ; ++it ) {
     int nb = (*it)->getNbDepend();
     int d = 0;
     while( nb-- > 0 ) botsL[(*it)->getDependence(d++)]->setSuccessor(*it); 
+  }
+}
+*/
+
+void BoT::makeBoTDependences() {
+  for( auto it = botsM.begin() ; it != botsM.end() ; ++it ) {
+    int nb = ((*it).second)->getNbDepend();
+    int d = 0;
+    while( nb-- > 0 )
+      botsM[((*it).second)->getDependence(d++)]->setSuccessor((*it).second); 
   }
 }
 

@@ -22,8 +22,9 @@ class User;
 
 class BoT : public Component {
   static vector<BoT*> botsL;
+  static map<int,BoT*> botsM; // <botId,ptr>
   static int botCount;
-  int botIId;
+  int botNum, id;  // internal BoT number (sequential), user privided identification
   vector<int>   initialAttribs;
   vector<BoT*>  successors;
   vector<Task*> tasksL;
@@ -39,7 +40,7 @@ public:
   void launch();
   inline vector<int>& getBoTAttr() { return initialAttribs; }
   inline STATUS getStatus() const { return status; }
-  //inline int getIId() const { return botIId; }
+  inline int getNum() const { return botNum; }
   inline int getArrivalDate() const { return initialAttribs[arrivalBoT]; }
   inline int getPriority() const { return initialPriority; }
   inline int getNbTasks() const { return initialAttribs[nbTasks]; }
