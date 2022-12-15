@@ -60,7 +60,6 @@ public:
       exit(0);
     }
   }
-  inline int  getId() const { return initialAttribs[botId]; }
   inline int  getDependence( int d ) const { return initialAttribs[firstDepend+d]; }
   inline void setSuccessor( BoT* b ) { successors.push_back(b); }
   inline void setReady() { status = ready_t; }

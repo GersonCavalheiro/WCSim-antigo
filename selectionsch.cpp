@@ -8,16 +8,26 @@
 #include "task.h"
 
 VM* VMSelection::random( User& owner, Task& task ) {
-  vector<VM*>& vmL = owner.getVMPool();
+  vector<VM*>& vmL = owner.getVMList();
   return vmL[rand()%vmL.size()];
   return *vmL.begin();
 }
 
+VM* VMSelection::circular( User& owner, Task& task ) {
+  static int p = 0;
+  VM *choice = owner.getVMList()[p];
+
+  ++p;
+  p = (p == owner.getVMList().size()) ? 0 : p;
+
+  return choice;
+}
+
 VM* VMSelection::load( User& owner, Task& task ) {
-  vector<VM*>& vmL = owner.getVMPool();
-  auto it = owner.getVMPool().begin();
+  vector<VM*>& vmL = owner.getVMList();
+  auto it = owner.getVMList().begin();
   VM*  vm = *it;
-  for( ; it != owner.getVMPool().end() ; ++it )
+  for( ; it != owner.getVMList().end() ; ++it )
     if( vm->getLoadNbTasks() > (*it)->getLoadNbTasks() )
       vm = *it;
 
@@ -25,10 +35,10 @@ VM* VMSelection::load( User& owner, Task& task ) {
 }
 
 VM* VMSelection::rate( User& owner, Task& task ) {
-  vector<VM*>& vmL = owner.getVMPool();
-  auto it = owner.getVMPool().begin();
+  vector<VM*>& vmL = owner.getVMList();
+  auto it = owner.getVMList().begin();
   VM*  vm = *it;
-  for( ; it != owner.getVMPool().end() ; ++it )
+  for( ; it != owner.getVMList().end() ; ++it )
     if( vm->getVMips() > (*it)->getVMips() )
       vm = *it;
 
@@ -36,10 +46,10 @@ VM* VMSelection::rate( User& owner, Task& task ) {
 }
 
 VM* VMSelection::selectVMByNbInstructions( User& owner, Task& task ) {
-  vector<VM*>& vmL = owner.getVMPool();
-  auto it = owner.getVMPool().begin();
+  vector<VM*>& vmL = owner.getVMList();
+  auto it = owner.getVMList().begin();
   VM*  vm = *it;
-  for( ; it != owner.getVMPool().end() ; ++it )
+  for( ; it != owner.getVMList().end() ; ++it )
     if( vm->getLoadNbInstructions() > (*it)->getLoadNbInstructions() )
       vm = *it;
 
@@ -58,8 +68,6 @@ Host* HostSelection::circular( User& owner, Instance& vm ) {
   ++p;
   p = (p == owner.getNode()->getHostsList().size()) ? 0 : p;
   
-  cout << "SIZE: " << owner.getNode()->getHostsList().size() << " SELECTED: " << choice->getId() << endl;
-
   return choice;
 }
 
@@ -78,8 +86,6 @@ Host* HostSelection::rate( User& owner, Instance& vm ) {
     }
   }
   
-  cout << "SIZE: " << hostsL.size() << " SELECTED: " << choice->getId() << endl;
-   
   return choice;
 }
 

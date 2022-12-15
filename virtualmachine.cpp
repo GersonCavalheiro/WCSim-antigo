@@ -11,8 +11,6 @@
 
 using namespace std;
 
-vector<VM*> VM::vmL;
-
 VM::VM(Node *node, User* owner ) :
 #ifdef FATVM
     FatInstance(node, owner) {
@@ -22,15 +20,14 @@ VM::VM(Node *node, User* owner ) :
     Instance(node, owner) {
 #endif
   componentName = strdup(__func__);
-  vmL.push_back(this);
 }
 
 void VM::suspend() {
   this->localSchedule();
   this->setStatus(suspended);
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
-    if( (*it)->getStatus() == running_t )
-      (*it)->setStatus(blocked_t);
+    if( (*it)->getStatus() == running_t ) // Because a task can be suspended
+      (*it)->setStatus(blocked_t);        // by another scheduling decision
 
   getRunningHost()->releaseCore( (taskL.size() >= getVCores())
 		                 ? getVCores()
@@ -44,8 +41,8 @@ void VM::resume() {
 		             : taskL.size() );
   this->setStatus(alive);
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it ) {
-    if( (*it)->getStatus() == blocked_t ) {
-      (*it)->setStatus(running_t);
+    if( (*it)->getStatus() == blocked_t ) { // Because a task can be suspended
+      (*it)->setStatus(running_t);          // by another scheduling decision
       (*it)->setDataStamp();
     }
   }
@@ -114,9 +111,9 @@ vector<VM*>* VM::createVMPool( int nbVMs, Host *host, User *owner ) {
 }
 
 void VM::printAllVMs() {
-  //cout << "VM size: " << vmL.size() << endl;
-  for( auto it = vmL.begin() ; it != vmL.end() ; ++it )
-    cout << *(*it) << endl;
+  auto it = Instance::getInstancesL().begin();
+  for( ; it != Instance::getInstancesL().end() ; ++it )
+    cout << *(VM*)(*it) << endl;
 }
 
 ostream& operator<<( ostream& out, vector<VM>& vms ) {

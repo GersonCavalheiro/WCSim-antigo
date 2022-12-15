@@ -14,6 +14,7 @@ using namespace std;
 
 class Instance : public Component {
 private:
+  static vector<Instance*> instanceL;
   static int nbInstances;
   int id;
   int vCores, vMips, vRam; // vMips, vRam per core
@@ -59,7 +60,10 @@ public:
   virtual void suspend() = 0;
   virtual void resume() = 0;
   virtual void migrate( int hostId ) = 0; 
+  virtual void localSchedule() = 0;
+  virtual int  getLoadNbTasks() = 0;
   void goHome();
+  static vector<Instance*>& getInstancesL() { return instanceL; }
 };
 
 class ThinInstance : public Instance {

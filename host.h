@@ -16,7 +16,7 @@ class Host : public BareMetal {
   static map<int,Host*>    hostsListById;
   static map<string,Host*> hostsListByName;
   static int hostCount;
-  vector<VM*> vmL;
+  vector<Instance*> vmL;
   list<Task*> taskList; // Lista de tarefas prontas
   int nbCores;
   int id, risingDate, status;
@@ -26,7 +26,6 @@ class Host : public BareMetal {
 public:
   Host( const string name, const int risingDate );
   inline int    getId()               const { return id; }
-  inline string getName()             { return hostName; }
   static string getName(int id)       { return hostsListById[id]->getName(); }
   inline int    getHostNb(int hostId) const
     { return hostsListById[hostId]->getId(); }
@@ -35,10 +34,12 @@ public:
   inline bool   isOnline()            const { return status == online; }
   inline void   setStatus( int st )         { status = st; }
   inline string getName() const             { return hostName; }
+  inline string getNodeName() const { return nodeName; }
   inline int    getNbVMs()            const { return vmL.size(); }
+  inline vector<Instance*>&   getVMList()         { return vmL; }
 
-  void pushVM( vector<VM*>& vmPool );
-  void pushVM( VM* vm );
+  void pushVM( vector<Instance*>& vmPool );
+  void pushVM( Instance* vm );
 
   // void updateSpeed();
 

@@ -69,13 +69,13 @@ void Host::printAllHosts() {
     cout << *it->second << endl;
 }
 
-void Host::pushVM( vector<VM*>& vmL ) {
+void Host::pushVM( vector<Instance*>& vmL ) {
   for( auto it = vmL.begin() ; it != vmL.end() ; ++it )
    pushVM(*it);
   vmL.clear();
 }
 
-void Host::pushVM( VM *vm ) {
+void Host::pushVM( Instance *vm ) {
   this->place(vm);
   vmL.push_back(vm); 
 }

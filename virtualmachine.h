@@ -19,7 +19,6 @@ class VM : public ThinInstance {
 class VM : public Instance {
 #endif
 private:
-  static vector<VM*> vmL;
   vector<Task*> taskL;    // Task placed over this VM
   int runningTasks;
 
@@ -29,7 +28,6 @@ public:
   static VM* createNewVM(User* owner);
   static vector<VM*> *createVMPool( int nbVMs, Host *host, User *owner );
   static void printAllVMs();
-  static inline vector<VM*> *getVmList() { return &vmL; }
 
   inline int   getLoadNbTasks() { return taskL.size(); } 
   void localSchedule();

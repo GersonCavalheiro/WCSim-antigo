@@ -62,12 +62,13 @@ void BoT::dependenceSatisfied() {
 void BoT::launch() {
   status = running_t;
   nbRunningTasks = tasksL.size();
-  Scheduler::scheduleTaskOnVM(tasksL,*owner,VMSelection::random);
+  Scheduler::scheduleTaskOnVM(tasksL,*owner,VMSelection::circular);
 }
 
 ostream& operator<<( ostream& out, const BoT& b ) {
   out << "[" << b.initialAttribs[0];
-  for( int i = 1 ; i < b.initialAttribs.size() ; ++i ) cout << "," << b.initialAttribs[i];
+  for( int i = 1 ; i < b.initialAttribs.size() ; ++i )
+    cout << "," << b.initialAttribs[i];
   cout << "]";
   if( b.successors.size() > 0 ) {
     out << " <- ( ";
@@ -157,7 +158,7 @@ void BoT::makeBoTDependences() {
 }
 
 void BoT::load() {
-  BoT::readBoTFile("input/sipht.dob");
+  BoT::readBoTFile("input/siphtCaso.dob");
   //BoT::readBoTFile("input/sipht.dob");
   //BoT::readBoTFile("input/ligo.dob");
   BoT::makeBoTDependences();

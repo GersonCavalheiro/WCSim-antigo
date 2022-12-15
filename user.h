@@ -34,7 +34,7 @@ public:
   inline Node *getNode() { return myNode; }
   //inline Host& getHost() const { return *myHostHost; }
   inline int getHostId() const { return 99; }
-  inline vector<VM*>& getVMPool() { return myVMPool; }
+  inline vector<VM*>& getVMList() { return myVMPool; }
   inline bool getStatus() const { return status; }
   inline int getUserLoginDate() const { return userLoginDate; }
   inline map<int,int>& getInvoice() { return invoice; }

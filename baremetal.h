@@ -63,9 +63,9 @@ public:
 		  setDataStamp();
   }
 
-  virtual void place( VM *vm );
-  virtual void unplace( VM *vm );
-  virtual bool fitRam( VM *vm );
+  virtual void place( Instance *vm );
+  virtual void unplace( Instance *vm );
+  virtual bool fitRam( Instance *vm );
   void setDataStamp()
 	  { lastDataStamp = GlobalClock::get(); }
   int  getDataStamp() { return lastDataStamp; }

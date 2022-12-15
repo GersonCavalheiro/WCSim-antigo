@@ -50,7 +50,7 @@ int main() {
 
   cout << "++++++\n";
   Usage::print();
-  User::charge();
+//  User::charge();
 
   return 0;
 }

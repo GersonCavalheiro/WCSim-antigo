@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "instance.h"
 #include "host.h"
 #include "node.h"
@@ -5,6 +7,7 @@
 #include "task.h"
 #include "user.h"
 
+vector<Instance*> Instance::instanceL;
 int Instance::nbInstances = 0;
 
 // SCHEDULE
@@ -13,7 +16,9 @@ Instance::Instance( Node *n, User *u, int vCores, int vMips, int vRam)
           : sourceNode(n), owner(u), vCores(vCores), vMips(vMips),
 	    vRam(vRam), nbTasks(0) {
   id = nbInstances++;
-  running = HostSelection::rate(*owner,*this);
+  instanceL.push_back(this);
+  running = HostSelection::circular(*owner,*this);
+  running->pushVM(this);
 }
 
 void Instance::goHome() {

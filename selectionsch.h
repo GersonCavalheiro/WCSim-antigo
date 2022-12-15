@@ -9,6 +9,7 @@
 
 struct VMSelection {
   static VM* random( User& owner, Task& task );
+  static VM* circular( User& owner, Task& task );
   static VM* load( User& owner, Task& task );
   static VM* rate( User& owner, Task& task );
   static VM* selectVMByNbInstructions( User& owner, Task& task );

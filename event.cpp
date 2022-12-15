@@ -39,7 +39,6 @@ BoTReadyEv::~BoTReadyEv() {
 }
 
 void BoTReadyEv::execute() {
-  //cout << "[" << getDate() << "] " << "BoT(" << bot->getId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Host(" << bot->getSourceHostPtr()->getName() << ") ready." << endl;
   bot->launch();
 }
 
@@ -51,7 +50,6 @@ BoTFinishEv::BoTFinishEv( BoT *bot ) : Event(GlobalClock::get(), 3), bot(bot) {
 }
 
 void BoTFinishEv::execute() {
-  //cout << "[" << getDate() << "] " << "BoT(" << bot->getId() << ") owner(" << bot->getOwnerPtr()->getName() << "), Host(" << bot->getSourceHostPtr()->getName() << ") finish." << endl;
   vector<BoT*> succ = bot->getSuccessorsL();
   for( auto it = succ.begin() ; it != succ.end() ; ++it )
     (*it)->dependenceSatisfied();
@@ -76,7 +74,7 @@ UserLoginEv::UserLoginEv( User* user )
 
 void UserLoginEv::execute() {
   user->userLogin();
-  ////cout << "[" << getDate() << "] " << "User(" << user->getName() << ") login." << endl;
+  //cout << "[" << getDate() << "] " << "User(" << user->getName() << ") login." << endl;
 }
 
 UserLoginEv::~UserLoginEv() {
@@ -153,6 +151,7 @@ InstanceSuspendEv::~InstanceSuspendEv() {
 }
 
 void InstanceSuspendEv::execute() {
+  cout << "Suspendendo!!!" << endl;
   vm->suspend();
 }
 
@@ -168,7 +167,8 @@ InstanceResumeEv::~InstanceResumeEv() {
 }
 
 void InstanceResumeEv::execute() {
-  vm->suspend();
+  cout << "Retomando!!!" << endl;
+  vm->resume();
 }
 
 MigrationStartEv::MigrationStartEv(Node *node, int date) : Event(date,0), node(node) {
@@ -182,4 +182,9 @@ MigrationStartEv::~MigrationStartEv() {
   node->popEvent();
 }
 
-void MigrationStartEv::execute() {}
+void MigrationStartEv::execute() {
+  Instance* vm = *(*(node->getHostsList().begin()))->getVMList().begin();
+  vm->suspend();
+  vm->migrate(7);
+  new InstanceResumeEv(vm,3000);
+}
