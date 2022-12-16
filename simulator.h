@@ -22,7 +22,6 @@ public:
     return aux;
   }
   static void run();
-  static void run(int i);
   static void printAllEvents();
   friend class Event;
 };

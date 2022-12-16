@@ -27,6 +27,7 @@ public:
   Host( const string name, const int risingDate );
   inline int    getId()               const { return id; }
   static string getName(int id)       { return hostsListById[id]->getName(); }
+  static string getNodeName(int id)       { return hostsListById[id]->getNodeName(); }
   inline int    getHostNb(int hostId) const
     { return hostsListById[hostId]->getId(); }
   inline int    getRisingDate()       const { return risingDate; }

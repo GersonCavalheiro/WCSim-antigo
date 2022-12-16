@@ -19,40 +19,6 @@ void Simulator::printAllEvents() {
     cout << "[" << i << "]" << *(*it) << endl;
 }
 
-void Simulator::run(int i) {
-  Event *nEv;
-  int ant;
-
-  GlobalClock::set(eventL.front()->getDate());
-
-  //new InstanceSuspendEv(*(Instance::getInstancesL().begin()),1000);
-  //new InstanceResumeEv(*(Instance::getInstancesL().begin()),3000);
-  new MigrationStartEv(*(Node::getNodeList().begin()),1000);
-
-  while( !eventL.empty() || Cloud::uncompletedTasks() > 0 ) {
-    if( !eventL.empty() && eventL.front()->getDate() == GlobalClock::get() ) {
-      Event* ev = eventL.front();
-      eventL.pop_front();
-      //cout << *ev << endl;
-      ev->execute();
-      delete(ev);
-    }
-    /*
-    int soma = 0;
-    auto it = Instance::getInstancesL().begin();
-    for( ; it != Instance::getInstancesL().end() ; ++it ) {
-      (*it)->localSchedule();
-      soma += (*it)->getLoadNbTasks();
-    }
-    */
-    SchedulePolice::localSchedule();
-    if( !eventL.empty() && eventL.front()->getDate() != GlobalClock::get() )
-      GlobalClock::set(GlobalClock::get()+1);
-  }
-
-  cout << "Uncompleted tasks: " << Cloud::uncompletedTasks() << endl;
-}
-
 void Simulator::run() {
   Event *nEv;
   int ant;
@@ -66,7 +32,7 @@ void Simulator::run() {
       Event* ev = eventL.front();
       eventL.pop_front();
       GlobalClock::set(ev->getDate());
-      cout << *ev << endl;
+      // cout << *ev << endl;
       ev->execute();
       delete(ev);
     } else // in this case: Cloud::uncompletedTasks() is > 0

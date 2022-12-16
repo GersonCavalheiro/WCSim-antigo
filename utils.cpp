@@ -68,7 +68,5 @@ char* itoa(int num, char* str, int base) {
  
     reverse(str, i);
 
-    cout << "Numero: " << str << endl;
- 
     return str;
 }

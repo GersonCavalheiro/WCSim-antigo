@@ -22,8 +22,6 @@ Host::Host( const string name, const int risingDate )
   id = hostCount++;
   hostName = nodeName + "H" + itoa(id,aux,10);
 
-  cout << "Numero: " << hostName << endl;
-  
   insertHostInLists(this);
   Node::pushHost(nodeName,this);
   if( risingDate > GlobalClock::get() ) {

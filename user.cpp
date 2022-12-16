@@ -12,7 +12,6 @@
 #include "cloud.h"
 #include "event.h"
 #include "globalclock.h"
-//#include "simulator.h"
 #include "virtualmachine.h"
 #include "schedulepolice.h"
 
@@ -133,6 +132,6 @@ void User::charge() {
     cout << "User :\t" << it->first << endl;
     
     for( auto iti = (it->second)->invoice.begin() ; iti != (it->second)->invoice.end() ; ++iti )
-      cout << "\t[" << iti->first << "," << iti->second << "]" << endl;
+      cout << "\t[" << Host::getNodeName(iti->first) << "," << iti->first << "," << iti->second << "]" << endl;
   }
 }
