@@ -8,13 +8,13 @@
 #include "utils.h"
 #include "user.h"
 #include "task.h"
+#include "node.h"
 #include "cloud.h"
 #include "event.h"
 #include "globalclock.h"
-#include "simulator.h"
+//#include "simulator.h"
 #include "virtualmachine.h"
-#include "node.h"
-#include "selectionsch.h"
+#include "schedulepolice.h"
 
 using namespace std;
 

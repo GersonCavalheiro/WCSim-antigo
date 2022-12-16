@@ -8,16 +8,17 @@
 #include <list>
 #include <set>
 
+#include "simulator.h"
+#include "event.h"
 #include "utils.h"
 #include "globalclock.h"
-#include "bot.h"
 #include "virtualmachine.h"
-#include "user.h"
 #include "task.h"
+#include "bot.h"
+#include "user.h"
 #include "host.h"
-#include "event.h"
 #include "cloud.h"
-#include "simulator.h"
+#include "schedulepolice.h"
 #include "usage.h"
 
 using namespace std;
@@ -32,13 +33,11 @@ static void startSequence() {
 int main() {
   startSequence();
 
-  Cloud::printAllCloud();
-  User::printAllUsers();
-  BoT::printAllBoTs();
-  VM::printAllVMs();
-  cout << "++++++\n";
-  Cloud::printAllLinks();
-  cout << "++++++\n";
+//  Cloud::printAllCloud();
+//  User::printAllUsers();
+//  BoT::printAllBoTs();
+//  VM::printAllVMs();
+//  Cloud::printAllLinks();
 
   Simulator::run();
 
@@ -50,7 +49,10 @@ int main() {
 
   cout << "++++++\n";
   Usage::print();
-//  User::charge();
+  cout << "++++++\n";
+  User::charge();
+  cout << "++++++\n";
+  cout << "Last BoT execution at: " << Simulator::lastBoTFinishDate << endl;
 
   return 0;
 }

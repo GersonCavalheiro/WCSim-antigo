@@ -13,6 +13,7 @@ class Simulator {
   static list<Event*> eventL;
   static inline void newEvent( Event *ev ) { orderInsert(eventL,ev); }
 public:
+  static int lastBoTFinishDate;
   Simulator() {}
   static inline Event* nextEvent() {
     if( eventL.size() == 0 ) return NULL;
@@ -21,6 +22,7 @@ public:
     return aux;
   }
   static void run();
+  static void run(int i);
   static void printAllEvents();
   friend class Event;
 };

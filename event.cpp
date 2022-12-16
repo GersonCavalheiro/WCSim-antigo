@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <string.h>
+
 #include "event.h"
 #include "bot.h"
 #include "user.h"
@@ -53,6 +54,7 @@ void BoTFinishEv::execute() {
   vector<BoT*> succ = bot->getSuccessorsL();
   for( auto it = succ.begin() ; it != succ.end() ; ++it )
     (*it)->dependenceSatisfied();
+  Simulator::lastBoTFinishDate = date;
 }
 
 string BoTFinishEv::eventName() {
@@ -74,7 +76,6 @@ UserLoginEv::UserLoginEv( User* user )
 
 void UserLoginEv::execute() {
   user->userLogin();
-  //cout << "[" << getDate() << "] " << "User(" << user->getName() << ") login." << endl;
 }
 
 UserLoginEv::~UserLoginEv() {
@@ -95,7 +96,6 @@ HostRisingEv::~HostRisingEv() {
 
 void HostRisingEv::execute() {
   host->setStatus(online);
-  //cout << "[" << getDate() << "] " << "Host(" << host->getName() << ") Rising." << endl;
 }
 
 string HostRisingEv::eventName() {
@@ -115,7 +115,6 @@ HostShutdownEv::~HostShutdownEv() {
 
 void HostShutdownEv::execute() {
   host->setStatus(offline);
-  //cout << "[" << getDate() << "] " << "Host(" << host->getName() << ") Shutdown." << endl;
 }
 
 string HostShutdownEv::eventName() {
@@ -136,7 +135,6 @@ TaskFinishEv::~TaskFinishEv() {
 
 void TaskFinishEv::execute() {
   task->getVMRunning()->popTask(task);
-  //cout << "[" << getDate() << "] " << "Task(" << task->getId() << ") BoT(" << task->getBoT()->getId() << ") finish." << endl;
 }
 
 InstanceSuspendEv::InstanceSuspendEv(Instance *vm, int date) : Event(date,0), vm(vm) {
@@ -151,7 +149,6 @@ InstanceSuspendEv::~InstanceSuspendEv() {
 }
 
 void InstanceSuspendEv::execute() {
-  cout << "Suspendendo!!!" << endl;
   vm->suspend();
 }
 
@@ -167,7 +164,6 @@ InstanceResumeEv::~InstanceResumeEv() {
 }
 
 void InstanceResumeEv::execute() {
-  cout << "Retomando!!!" << endl;
   vm->resume();
 }
 

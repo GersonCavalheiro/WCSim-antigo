@@ -1,13 +1,19 @@
-#ifndef __selectionsch_h__
-#define __selectionsch_h__
+#ifndef __schedulepolice_h_
+#define __schedulepolice_h_
 
 #include <vector>
 #include "user.h"
+#include "instance.h"
 #include "host.h"
 #include "virtualmachine.h"
 #include "task.h"
 
 struct SchedulePolice {
+  static inline void localSchedule() {
+    auto it = Instance::getInstancesL().begin();
+    for( ; it != Instance::getInstancesL().end() ; ++it ) 
+      (*it)->localSchedule();
+  }
   static VM*   vmSelection( User& owner, Task& task );
   static Host* hostSelection( Node& node, Instance& vm );
   static Host* vmMigration( User& owner, Instance& vm );
