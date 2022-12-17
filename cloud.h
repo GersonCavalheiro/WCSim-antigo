@@ -30,6 +30,7 @@ public:
   static void printAllLinks();
   static void printAllCloud();
   static Node *getNode(string name);
+  static int delay( Instance *vm, Host *src, Host *dst );
 };
 
 #endif

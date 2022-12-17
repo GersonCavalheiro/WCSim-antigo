@@ -60,6 +60,7 @@ public:
   virtual void suspend() = 0;
   virtual void resume() = 0;
   virtual void migrate( int hostId ) = 0; 
+  virtual void migrate( Host *host ) = 0; 
   virtual void localSchedule() = 0;
   virtual int  getLoadNbTasks() = 0;
   void goHome();

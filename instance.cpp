@@ -20,6 +20,7 @@ Instance::Instance( Node *n, User *u, int vCores, int vMips, int vRam)
   //running = HostSelection::circular(*(owner->getNode()),*this);
   running = SchedulePolice::hostSelection(*(owner->getNode()),*this);
   running->pushVM(this);
+  setStatus(alive);
 }
 
 void Instance::goHome() {
@@ -39,6 +40,7 @@ void Instance::unplace( Task *t ) {
 }
 
 void Instance::avanceTask( Task *t ) {
+  if( getStatus() != alive ) abort();
   auto actualMips = (running->getActualMips() < this->getVMips())
                     ? running->getActualMips()
                     : this->getVMips() * running->utilizationRate();
@@ -54,19 +56,4 @@ bool Instance::fitRam( Task *t ) {
 int Instance::getRunningHostId() {
   return running->getId();
 }
-
-/*
-void ThinInstance::avanceTask( Task *t ) {
-  auto actualMips = 10;
-  t->hup((GlobalClock::get() - t->getDataStamp())
-                        * actualMips);
-}
-
-void FatInstance::avanceTask( Task *t ) {
-  auto actualMips = 1000;
-  t->hup((GlobalClock::get() - t->getDataStamp())
-                        * actualMips);
-}
-*/
-
 

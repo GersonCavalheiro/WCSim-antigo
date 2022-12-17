@@ -16,9 +16,12 @@ Host *SchedulePolice::hostSelection( Node& node, Instance& vm ) {
  return HostSelection::circular(node,vm);
 }
 
-Host *SchedulePolice::vmMigration( User& owner, Instance& vm ) {
-  return VMMigration::random(owner,vm);
+Host *SchedulePolice::receiverSelection( Host& sender ) {
+  //return VMMigration::randomReceiver(sender);
+  return VMMigration::circularReceiver(sender);
 }
+
+// ------------------------
 
 VM* VMSelection::random( User& owner, Task& task ) {
   vector<VM*>& vmL = owner.getVMList();
@@ -105,7 +108,16 @@ Host* HostSelection::rate( Node& node, Instance& vm ) {
 Host* HostSelection::bestFit( Node& node, Instance& vm ) { return (Host*) NULL; }
 Host* HostSelection::worstFit( Node& node, Instance& vm ) { return (Host*) NULL; }
 
-Host* VMMigration::random( User& owner, Instance& vm ) { return (Host*) NULL; }
-Host* VMMigration::circular( User& owner, Instance& vm ) { return (Host*) NULL; }
+Host* VMMigration::randomReceiver( Host& source ) { 
+  int n = random()%(Host::getNbHosts()-1);
+  if( n >= source.getId() ) ++n;
+  return (Host*) Host::getHostPtrById(n);
+}
+Host* VMMigration::circularReceiver( Host& source ) { 
+  static int n = 0;
+  if( n == source.getId() ) ++n;
+  if( n >= Host::getNbHosts() ) n = 0;
+  return (Host*) Host::getHostPtrById(n++);
+}
 
 

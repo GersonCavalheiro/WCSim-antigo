@@ -14,6 +14,7 @@ class Simulator {
   static inline void newEvent( Event *ev ) { orderInsert(eventL,ev); }
 public:
   static int lastBoTFinishDate;
+  static int lastTaskFinishDate;
   Simulator() {}
   static inline Event* nextEvent() {
     if( eventL.size() == 0 ) return NULL;

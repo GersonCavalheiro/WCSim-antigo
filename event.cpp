@@ -7,6 +7,7 @@
 #include "user.h"
 #include "cloud.h"
 #include "host.h"
+#include "schedulepolice.h"
 #include "simulator.h"
 
 int Event::eventCount = 0;
@@ -28,7 +29,7 @@ ostream& operator<<( ostream& out, Event &e ) {
 }
 
 // -------- BOT EVENTS 
-BoTReadyEv::BoTReadyEv( BoT *bot ) : Event(GlobalClock::get(), 3), bot(bot) {
+BoTReadyEv::BoTReadyEv( BoT *bot ) : Event(GlobalClock::get(), 0), bot(bot) {
   nameEv = strdup(__func__);
   nameComp = bot->getComponentName();
   idComp   = bot->getId();
@@ -43,7 +44,7 @@ void BoTReadyEv::execute() {
   bot->launch();
 }
 
-BoTFinishEv::BoTFinishEv( BoT *bot ) : Event(GlobalClock::get(), 3), bot(bot) {
+BoTFinishEv::BoTFinishEv( BoT *bot ) : Event(GlobalClock::get(), 0), bot(bot) {
   nameEv = strdup(__func__);
   nameComp = bot->getComponentName();
   idComp   = bot->getId();
@@ -54,7 +55,12 @@ void BoTFinishEv::execute() {
   vector<BoT*> succ = bot->getSuccessorsL();
   for( auto it = succ.begin() ; it != succ.end() ; ++it )
     (*it)->dependenceSatisfied();
+  if( Simulator::lastBoTFinishDate > date ) {
+   cout << "Last: " << Simulator::lastBoTFinishDate << " New: " << date << endl;
+   abort();
+  }
   Simulator::lastBoTFinishDate = date;
+  cout << "BoT[" << bot->getId() << "]  Finish: " <<  GlobalClock::get() << endl;
 }
 
 string BoTFinishEv::eventName() {
@@ -122,7 +128,7 @@ string HostShutdownEv::eventName() {
 }
 
 // --------- TASK EVENTS
-TaskFinishEv::TaskFinishEv( Task *task, int date ) : Event(date,4), task(task) {
+TaskFinishEv::TaskFinishEv( Task *task, int date ) : Event(date,0), task(task) {
   nameEv = strdup(__func__);
   nameComp = task->getComponentName();
   idComp   = task->getId();
@@ -135,6 +141,7 @@ TaskFinishEv::~TaskFinishEv() {
 
 void TaskFinishEv::execute() {
   task->getVMRunning()->popTask(task);
+  Simulator::lastTaskFinishDate = date;
 }
 
 InstanceSuspendEv::InstanceSuspendEv(Instance *vm, int date) : Event(date,0), vm(vm) {
@@ -167,20 +174,28 @@ void InstanceResumeEv::execute() {
   vm->resume();
 }
 
-MigrationStartEv::MigrationStartEv(Node *node, int date) : Event(date,0), node(node) {
+SenderInitiatedMigrationEv::SenderInitiatedMigrationEv(Host *host, int date)
+       	: Event(date,0), sender(host) {
   nameEv = strdup(__func__);
-  nameComp = node->getComponentName();
-  idComp   = node->getId();
-  node->pushEvent(this);
+  nameComp = sender->getComponentName();
+  idComp   = sender->getId();
+  sender->pushEvent(this);
 }
 
-MigrationStartEv::~MigrationStartEv() {
-  node->popEvent();
+SenderInitiatedMigrationEv::~SenderInitiatedMigrationEv() {
+  sender->popEvent();
 }
 
-void MigrationStartEv::execute() {
-  Instance* vm = *(*(node->getHostsList().begin()))->getVMList().begin();
-  vm->suspend();
-  vm->migrate(7);
-  new InstanceResumeEv(vm,3000);
+void SenderInitiatedMigrationEv::execute() {
+  Host *receiver; 
+  Instance* vm;
+
+  cout << "Sender: " << sender->getName() << endl;
+
+  if( sender->getVMMap().size() == 0 ) return;
+  vm = sender->getVMMap()[0];
+  receiver = SchedulePolice::receiverSelection(*(vm->getRunningHost()));
+  vm->migrate(receiver);
+  //new InstanceResumeEv(vm,GlobalClock::get()+Cloud::delay(vm,sender,receiver));
+  new InstanceResumeEv(vm,GlobalClock::get()+1);
 }

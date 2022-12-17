@@ -3,11 +3,12 @@
 #include <string.h>
 
 #include "virtualmachine.h"
+#include "instance.h"
 #include "host.h"
 #include "node.h"
 #include "task.h"
 #include "user.h"
-#include "instance.h"
+#include "schedulepolice.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ VM::VM(Node *node, User* owner ) :
 }
 
 void VM::suspend() {
-  this->localSchedule();
+  SchedulePolice::localSchedule();
   this->setStatus(suspended);
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( (*it)->getStatus() == running_t ) // Because a task can be suspended
@@ -35,7 +36,7 @@ void VM::suspend() {
 }
 
 void VM::resume() {
-  this->localSchedule();
+  SchedulePolice::localSchedule();
   getRunningHost()->pinCore( (taskL.size() >= getVCores())
 		             ? getVCores()
 		             : taskL.size() );
@@ -49,9 +50,15 @@ void VM::resume() {
 }
 
 void VM::migrate( int hostId ) {
-  setRunningHost(Host::getHostPtrById(hostId));
+  migrate(Host::getHostPtrById(hostId));
 }
 
+void VM::migrate( Host *receiver ) {
+  suspend();
+  getRunningHost()->popVM(this);
+  setRunningHost(receiver);
+  receiver->pushVM(this);
+}
 
 void VM::pushTask( Task *task ) {
   //cout << "PushTask : " << GlobalClock::get() << endl;
@@ -62,7 +69,7 @@ void VM::pushTask( Task *task ) {
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( *it == task ) { cout << "existe\n"; exit(0); }
   taskL.push_back(task);
-  this->localSchedule();
+  SchedulePolice::localSchedule();
   ++runningTasks;
 }
 
@@ -76,10 +83,11 @@ void VM::popTask( Task *task ) {
       taskL.erase(it);
       break;
     }
-  this->localSchedule();
+  SchedulePolice::localSchedule();
 }
 
 void VM::localSchedule() {
+  if( getStatus() != alive ) return;
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it ) {
     if( (*it)->getStatus() == running_t ) {
       this->avanceTask(*it);

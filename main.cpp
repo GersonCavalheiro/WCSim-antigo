@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <bits/stdc++.h>
+#include <sys/time.h>
 #include <list>
 #include <set>
 
@@ -24,6 +25,8 @@
 using namespace std;
 
 static void startSequence() {
+  struct timeval t;
+  srand(gettimeofday(&t,&t));
   Cloud::deploy();
   Cloud::printAllCloud();
   User::onboarding();
@@ -52,7 +55,8 @@ int main() {
   cout << "++++++\n";
   User::charge();
   cout << "++++++\n";
-  cout << "Last BoT execution at: " << Simulator::lastBoTFinishDate << endl;
+  cout << "Last BoT execution at:  " << Simulator::lastBoTFinishDate << endl;
+  cout << "Last Task execution at: " << Simulator::lastTaskFinishDate << endl;
 
   return 0;
 }

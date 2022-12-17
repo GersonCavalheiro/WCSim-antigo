@@ -16,7 +16,8 @@ class Host : public BareMetal {
   static map<int,Host*>    hostsListById;
   static map<string,Host*> hostsListByName;
   static int hostCount;
-  vector<Instance*> vmL;
+  //vector<Instance*> vmL;
+  map<int,Instance*> vmM;
   list<Task*> taskList; // Lista de tarefas prontas
   int nbCores;
   int id, risingDate, status;
@@ -36,11 +37,12 @@ public:
   inline void   setStatus( int st )         { status = st; }
   inline string getName() const             { return hostName; }
   inline string getNodeName() const { return nodeName; }
-  inline int    getNbVMs()            const { return vmL.size(); }
-  inline vector<Instance*>&   getVMList()         { return vmL; }
+  inline int    getNbVMs()            const { return vmM.size(); }
+//  inline vector<Instance*>&   getVMList()         { return vmL; }
+  inline map<int,Instance*>&   getVMMap()         { return vmM; }
 
-  void pushVM( vector<Instance*>& vmPool );
   void pushVM( Instance* vm );
+  void popVM( Instance* vm );
 
   // void updateSpeed();
 

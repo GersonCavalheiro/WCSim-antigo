@@ -99,3 +99,7 @@ void Cloud::printAllCloud() {
   cout << "****" << endl;
 }
 
+int Cloud::delay( Instance *vm, Host *src, Host *dst ) {
+  int mbps = (src->getNodeName() == dst->getNodeName()) ? 10000 : 1000;
+  return vm->getVRam()*1024/8/mbps;
+}

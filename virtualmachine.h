@@ -39,6 +39,7 @@ public:
   void suspend();
   void resume();
   void migrate( int hostId );
+  void migrate( Host *host );
 
   friend ostream& operator<<( ostream& out, VM& vm );
 };

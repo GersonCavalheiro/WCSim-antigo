@@ -11,12 +11,13 @@
 struct SchedulePolice {
   static inline void localSchedule() {
     auto it = Instance::getInstancesL().begin();
-    for( ; it != Instance::getInstancesL().end() ; ++it ) 
-      (*it)->localSchedule();
+    for( ; it != Instance::getInstancesL().end() ; ++it )
+      if( (*it)->getStatus() == alive )
+         (*it)->localSchedule();
   }
   static VM*   vmSelection( User& owner, Task& task );
   static Host* hostSelection( Node& node, Instance& vm );
-  static Host* vmMigration( User& owner, Instance& vm );
+  static Host* receiverSelection( Host& sender );
 };
 
 struct VMSelection {
@@ -36,8 +37,8 @@ struct HostSelection {
 };
 
 struct VMMigration {
-  static Host* random( User& owner, Instance& vm );
-  static Host* circular( User& owner, Instance& vm );
+  static Host* randomReceiver( Host& sender );
+  static Host* circularReceiver( Host& sender );
 };
 
 #endif

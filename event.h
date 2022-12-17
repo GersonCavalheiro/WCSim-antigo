@@ -131,11 +131,11 @@ public:
 };
 
 // -------- SCHEDULE EVENTS
-class MigrationStartEv : public Event {
-  Node *node; //Node launching migration
+class SenderInitiatedMigrationEv : public Event {
+  Host *sender; //Node launching migration
 public:
-  MigrationStartEv( Node *node, int date );
-  ~MigrationStartEv();
+  SenderInitiatedMigrationEv( Host *host, int date );
+  ~SenderInitiatedMigrationEv();
   void execute();
   string eventName() { return to_string(date)+string(": Migration Start "); }
 };

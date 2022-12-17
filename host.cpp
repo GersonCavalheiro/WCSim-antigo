@@ -67,14 +67,18 @@ void Host::printAllHosts() {
     cout << *it->second << endl;
 }
 
-void Host::pushVM( vector<Instance*>& vmL ) {
-  for( auto it = vmL.begin() ; it != vmL.end() ; ++it )
-   pushVM(*it);
-  vmL.clear();
-}
-
 void Host::pushVM( Instance *vm ) {
   this->place(vm);
-  vmL.push_back(vm); 
+  vmM.insert({vm->getId(),vm}); 
 }
 
+void Host::popVM( Instance *vm ) {
+  this->unplace(vm);
+  if( vmM.find(vm->getId()) == vmM.end() ) {
+	  cout << "Não achou" << endl;
+	  abort();
+  }
+  cout << "****\n";
+  vmM.erase(vmM.find(vm->getId()));
+  cout << "****\n";
+}
