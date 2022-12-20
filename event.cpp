@@ -60,6 +60,7 @@ void BoTFinishEv::execute() {
    abort();
   }
   Simulator::lastBoTFinishDate = date;
+  bot->getOwnerPtr()->setLastBoTFinishDate(date);
   cout << "BoT[" << bot->getId() << "]  Finish: " <<  GlobalClock::get() << endl;
 }
 

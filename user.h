@@ -21,23 +21,24 @@ class User : public Component {
   map<int,int> invoice;
   static int userCount;
   string userName, userNodeName;
-  int    id, status, userLoginDate, nbVMs, vmFamily;
+  int    id, status, userLoginDate, nbVMs, vmFamily, lastBoTFinish;
   vector<VM*> myVMPool;
   Node *myNode;
 
 public:
   User( string name, string node, int userLoginDate, int nbVMs, int vmFamily = 0 );
   bool rentNewVMs( int n = 1 );
-  //void schedule( vector<Task*> &taskL );
   inline int getId() const { return id; }
   inline string getName() const { return userName; }
+  static string getName(int id) { return usersListById[id]->getName(); }
   inline Node *getNode() { return myNode; }
-  //inline Host& getHost() const { return *myHostHost; }
   inline int getHostId() const { return 99; }
   inline vector<VM*>& getVMList() { return myVMPool; }
   inline bool getStatus() const { return status; }
   inline int getUserLoginDate() const { return userLoginDate; }
   inline map<int,int>& getInvoice() { return invoice; }
+  inline void setLastBoTFinishDate( int date ) { lastBoTFinish = date; }
+  inline int  getLastBoTFinishDate() const { return lastBoTFinish; }
 
   void userLogin();
   void billing(int host, int nbInst );

@@ -28,6 +28,7 @@ User::User( string name, string node, int userLoginDate, int nbVMs, int vmFamily
   id = userCount++;
   usersListById.insert(pair<int,User*>(id,this));
   usersListByName.insert(pair<string,User*>(userName,this));
+  lastBoTFinish = 0;
 
   if( userLoginDate > GlobalClock::get() ) {
     status = offline;
@@ -130,8 +131,25 @@ void User::charge() {
   for( auto it = usersListById.begin() ; it != usersListById.end() ; ++it ) {
     cout << "------------\n";
     cout << "User :\t" << it->first << endl;
-    
+
     for( auto iti = (it->second)->invoice.begin() ; iti != (it->second)->invoice.end() ; ++iti )
       cout << "\t[" << Host::getNodeName(iti->first) << "," << iti->first << "," << iti->second << "]" << endl;
   }
+
+  ofstream wallet("output/wallet.csv", ios::out);
+  wallet << "User,UserId,Host,HostId,nbInst" << endl;
+  for( auto it = usersListById.begin() ; it != usersListById.end() ; ++it )
+    for( auto iti = (it->second)->invoice.begin() ; iti != (it->second)->invoice.end() ; ++iti )
+      wallet << User::getName(it->first) << "," << it->first << ","
+             << Host::getNodeName(iti->first) << ","
+	     << iti->first << ","
+	     << iti->second << endl;
+  wallet.close();
+
+  ofstream performance("output/performance.csv", ios::out);
+  performance << "User,User,Id,ExecutionTime" << endl;
+  for( auto it = usersListById.begin() ; it != usersListById.end() ; ++it )
+    performance << User::getName(it->first) << "," << it->first << ","
+	        << (*it).second->getLastBoTFinishDate() << endl;
+  performance.close();
 }
