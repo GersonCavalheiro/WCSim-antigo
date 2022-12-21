@@ -59,6 +59,7 @@ void BoTFinishEv::execute() {
    cout << "Last: " << Simulator::lastBoTFinishDate << " New: " << date << endl;
    abort();
   }
+  //cout << "BoT (" << bot->getId() << ") Finish\n";
   Simulator::lastBoTFinishDate = date;
   bot->getOwnerPtr()->setLastBoTFinishDate(date);
 }
@@ -142,6 +143,7 @@ TaskFinishEv::~TaskFinishEv() {
 void TaskFinishEv::execute() {
   task->getVMRunning()->popTask(task);
   Simulator::lastTaskFinishDate = date;
+  //cout << "Task (" << task->getId() << ") Finish\n";
 }
 
 InstanceSuspendEv::InstanceSuspendEv(Instance *vm, int date) : Event(date,0), vm(vm) {

@@ -9,10 +9,12 @@
 #include "task.h"
 
 VM *Scheduler::vmSelection( User& owner, Task& task ) {
+  return VMSelection::fixed(owner,task);
   return VMSelection::circular(owner,task);
 }
 
 Host *Scheduler::hostSelection( Node& node, Instance& vm ) {
+ return HostSelection::fixed(node,vm);
  return HostSelection::circular(node,vm);
 }
 
@@ -23,10 +25,14 @@ Host *Scheduler::receiverSelection( Host& sender ) {
 
 // ------------------------
 
+VM* VMSelection::fixed( User& owner, Task& task ) {
+  vector<VM*>& vmL = owner.getVMList();
+  return *vmL.begin();
+}
+
 VM* VMSelection::random( User& owner, Task& task ) {
   vector<VM*>& vmL = owner.getVMList();
   return vmL[rand()%vmL.size()];
-  return *vmL.begin();
 }
 
 VM* VMSelection::circular( User& owner, Task& task ) {
@@ -70,6 +76,10 @@ VM* VMSelection::selectVMByNbInstructions( User& owner, Task& task ) {
       vm = *it;
 
   return vm;
+}
+
+Host* HostSelection::fixed( Node& node, Instance& vm ) {
+  return *(node.getHostsList().begin());
 }
 
 Host* HostSelection::random( Node& node, Instance& vm ) {

@@ -21,6 +21,7 @@ struct Scheduler {
 };
 
 struct VMSelection {
+  static VM* fixed( User& owner, Task& task );
   static VM* random( User& owner, Task& task );
   static VM* circular( User& owner, Task& task );
   static VM* load( User& owner, Task& task );
@@ -29,6 +30,7 @@ struct VMSelection {
 };
 
 struct HostSelection {
+  static Host* fixed( Node& node, Instance& vm );
   static Host* random( Node& node, Instance& vm );
   static Host* circular( Node& node, Instance& vm );
   static Host* rate( Node& node, Instance& vm );

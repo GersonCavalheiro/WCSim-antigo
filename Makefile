@@ -6,7 +6,7 @@ INCLUDES = $(wildcard *.h)
 CC = g++
 %CFLAGS = -std=c++17 -g -DFATVM
 %CFLAGS = -std=c++17 -g -DTHINVM
-CFLAGS = -std=c++17 -ffast-math -march=native
+CFLAGS = -g -std=c++17 -ffast-math -march=native
 EXEC = main
 	
 main : $(OBJS)

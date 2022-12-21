@@ -10,7 +10,7 @@ struct FileNames {
   static string getDoBFileName() { return dobFileName; }
   static void   setCloudFileName(string name) { cloudFileName = "input/"+name+".cld"; }
   static string getCloudFileName() { return cloudFileName; }
-  static void   setPasswordFileName(string name) { passwordFileName = "input/"+name+".pas"; }
+  static void   setPasswordFileName(string name) { passwordFileName = "input/"+name+".pwd"; }
   static string getPasswordFileName() { return passwordFileName; }
   static void   setNetworkFileName(string name) { networkFileName = "input/"+name+".net"; }
   static string getNetworkFileName() { return networkFileName; }

@@ -26,7 +26,9 @@ void Simulator::run() {
   int nbEvents = 0;
 
   GlobalClock::set(eventL.front()->getDate());
+  GlobalClock::set(0);
 
+  /*
   new SenderInitiatedMigrationEv(Host::getHostPtrById(0),1000);
   new SenderInitiatedMigrationEv(Host::getHostPtrById(1),2000);
   new SenderInitiatedMigrationEv(Host::getHostPtrById(2),3000);
@@ -34,7 +36,6 @@ void Simulator::run() {
   new SenderInitiatedMigrationEv(Host::getHostPtrById(4),5000);
   new SenderInitiatedMigrationEv(Host::getHostPtrById(5),6000);
 
-  /*
   new SenderInitiatedMigrationEv(Host::getHostPtrById(0),10000);
   new SenderInitiatedMigrationEv(Host::getHostPtrById(1),20000);
   new SenderInitiatedMigrationEv(Host::getHostPtrById(2),30000);
@@ -48,13 +49,14 @@ void Simulator::run() {
       Event* ev = eventL.front();
       if( ev->getDate() == GlobalClock::get() ) {
         eventL.pop_front();
-        // cout << *ev << endl;
+        //cout << *ev << endl;
         ev->execute();
        delete(ev);
+       ++nbEvents;
       } else GlobalClock::set(GlobalClock::get()+1);
     }
     Scheduler::localSchedule();
-    if( !(++nbEvents%100)) cout << nbEvents << endl;
+    if( !(GlobalClock::get()%100)) cout << "Size = " << eventL.size() << " [" << GlobalClock::get() << ":" << nbEvents << "]" << endl;
   }
 
   cout << "Uncompleted tasks: " << Cloud::uncompletedTasks() << endl;
