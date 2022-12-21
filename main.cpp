@@ -8,6 +8,7 @@
 #include <sys/time.h>
 #include <list>
 #include <set>
+#include <chrono>
 
 #include "simulator.h"
 #include "event.h"
@@ -56,15 +57,16 @@ int main( int argc, char **argv) {
 //  BoT::printAllBoTs();
 //  VM::printAllVMs();
 //  Cloud::printAllLinks();
-
+  
+  auto start = chrono::high_resolution_clock::now();
   Simulator::run();
+  auto end = chrono::high_resolution_clock::now();
 
   cout << "++++++\n";
   cout << "Global::Clock: " << GlobalClock::get() << endl;
   cout << "Tasks - Total: " << Task::getNbTasks() << ", Running: "
        << Task::getRunningTasks() << ", Completed: "
        << Task::getCompletedTasks() << endl;
-
   cout << "++++++\n";
   Usage::print();
   cout << "++++++\n";
@@ -72,6 +74,8 @@ int main( int argc, char **argv) {
   cout << "++++++\n";
   cout << "Last BoT execution at:  " << Simulator::lastBoTFinishDate << endl;
   cout << "Last Task execution at: " << Simulator::lastTaskFinishDate << endl;
+  chrono::duration<double> elapsed = end - start;
+  cout << "Simulation time: " << elapsed.count() << "s" << endl;
 
   return 0;
 }
