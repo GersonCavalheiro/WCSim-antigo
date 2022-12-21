@@ -14,6 +14,7 @@
 #include "globalclock.h"
 #include "virtualmachine.h"
 #include "schedulepolice.h"
+#include "filenames.h"
 
 using namespace std;
 
@@ -88,7 +89,6 @@ void User::readUserFile(string userFileName) {
   int    userLoginDate, nbVMs, vmFamily;
 
   std::ifstream infile(userFileName);
-  cout << "User file name: " << userFileName << endl;
   
   infile >> name;
   while( !infile.eof() ) {
@@ -124,7 +124,7 @@ void User::printAllUsers() {
 }
 
 void User::onboarding() {
-  User::readUserFile();
+  User::readUserFile(FileNames::getPasswordFileName());
 }
 
 void User::charge() {

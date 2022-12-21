@@ -61,7 +61,6 @@ void BoTFinishEv::execute() {
   }
   Simulator::lastBoTFinishDate = date;
   bot->getOwnerPtr()->setLastBoTFinishDate(date);
-  cout << "BoT[" << bot->getId() << "]  Finish: " <<  GlobalClock::get() << endl;
 }
 
 string BoTFinishEv::eventName() {
@@ -190,8 +189,6 @@ SenderInitiatedMigrationEv::~SenderInitiatedMigrationEv() {
 void SenderInitiatedMigrationEv::execute() {
   Host *receiver; 
   Instance* vm;
-
-  cout << "Sender: " << sender->getName() << endl;
 
   if( sender->getVMMap().size() == 0 ) return;
   vm = sender->getVMMap()[0];

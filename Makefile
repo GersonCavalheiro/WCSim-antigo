@@ -1,4 +1,5 @@
 NAME = main
+INPUTFILES = sipht_g mycloud_g passwd_g network_g
 SOURCES = $(wildcard *.cpp)
 OBJS = $(SOURCES:.cpp=.o)
 INCLUDES = $(wildcard *.h)
@@ -24,4 +25,4 @@ clean:
 	rm -rf *.o $(NAME)
 
 run: $(EXEC)
-	./$(EXEC) < input/sipht.dob
+	./$(EXEC) $(INPUTFILES)

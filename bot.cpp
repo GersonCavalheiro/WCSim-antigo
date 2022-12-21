@@ -17,6 +17,7 @@
 #include "cloud.h"
 #include "scheduler.h"
 #include "schedulepolice.h"
+#include "filenames.h"
 
 using namespace std;
 
@@ -144,7 +145,6 @@ void BoT::readBoTFile( string botFileName ) {
   string strIn, strOut;
  
   std::ifstream infile(botFileName);
-  cout << "DoB file name: " << botFileName << endl;
   std::getline(infile,strIn);
   while( !infile.eof() ) {
     strOut = extractAllIntegers(strIn);
@@ -163,7 +163,8 @@ void BoT::makeBoTDependences() {
 }
 
 void BoT::load() {
-  BoT::readBoTFile("input/siphtCaso.dob");
+  BoT::readBoTFile(FileNames::getDoBFileName());
+  //BoT::readBoTFile("input/siphtCaso.dob");
   //BoT::readBoTFile("input/sipht.dob");
   //BoT::readBoTFile("input/ligo.dob");
   BoT::makeBoTDependences();

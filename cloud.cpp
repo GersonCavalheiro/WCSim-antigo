@@ -7,6 +7,7 @@
 #include "host.h"
 #include "baremetal.h"
 #include "event.h"
+#include "filenames.h"
 
 vector<vector<int>> Cloud::link;
 
@@ -22,8 +23,7 @@ Node *Cloud::getNode(string name) {
 void Cloud::readCloudFile( string cloudFileName ) {
   string name;
   int hostRisingDate, bmFamily;
-  std::ifstream infile(cloudFileName);
-  cout << "Cloud file name: " << cloudFileName << endl;
+  std::ifstream infile(FileNames::getCloudFileName());
 
   infile >> name;
   while( !infile.eof() ) {
@@ -57,8 +57,7 @@ int Cloud::getLinkSpeed( int source, vector<int>& vSpeeds ) {
 void Cloud::readNetworkFile( string networkFileName ) {
   int host = 0;
   string strIn, strOut;
-  std::ifstream infile(networkFileName);
-  cout << "Network file name: " << networkFileName << endl;
+  std::ifstream infile(FileNames::getNetworkFileName());
 
   std::getline(infile,strIn);
   while( !infile.eof() && host < Host::getNbHosts() ) {

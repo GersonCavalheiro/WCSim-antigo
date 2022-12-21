@@ -8,7 +8,6 @@
 #include "user.h"
 #include "component.h"
 
-
 class Cloud : public Component {
   static vector<vector<int>> link;
 public:

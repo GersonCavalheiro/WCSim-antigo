@@ -23,7 +23,7 @@ void Simulator::printAllEvents() {
 
 void Simulator::run() {
   Event *nEv;
-  int ant;
+  int nbEvents = 0;
 
   GlobalClock::set(eventL.front()->getDate());
 
@@ -54,6 +54,7 @@ void Simulator::run() {
       } else GlobalClock::set(GlobalClock::get()+1);
     }
     SchedulePolice::localSchedule();
+    if( !(++nbEvents%100)) cout << nbEvents << endl;
   }
 
   cout << "Uncompleted tasks: " << Cloud::uncompletedTasks() << endl;

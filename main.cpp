@@ -21,6 +21,7 @@
 #include "cloud.h"
 #include "schedulepolice.h"
 #include "usage.h"
+#include "filenames.h"
 
 using namespace std;
 
@@ -28,12 +29,26 @@ static void startSequence() {
   struct timeval t;
   srand(gettimeofday(&t,&t));
   Cloud::deploy();
-  Cloud::printAllCloud();
+  //Cloud::printAllCloud();
   User::onboarding();
   BoT::load();
 }
 
-int main() {
+int main( int argc, char **argv) {
+  if( argc != 5 ) {
+    cout << "Usage:\n\twcsim dobFile cloudFile passwordFile networkFile" << endl;
+    abort();
+  } else {
+    FileNames::setDoBFileName(argv[1]);
+    FileNames::setCloudFileName(argv[2]);
+    FileNames::setPasswordFileName(argv[3]);
+    FileNames::setNetworkFileName(argv[4]);
+    cout << "Using:\n\twcsim " << "\tDoB:\t " << FileNames::getDoBFileName() << endl
+	                       << "\t\tCloud:\t " << FileNames::getCloudFileName() << endl
+	                       << "\t\tPassord: " << FileNames::getPasswordFileName() << endl
+	                       << "\t\tNetwork: " << FileNames::getNetworkFileName() << endl;
+
+  }
   startSequence();
 
 //  Cloud::printAllCloud();

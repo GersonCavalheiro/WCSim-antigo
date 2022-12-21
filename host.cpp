@@ -78,7 +78,5 @@ void Host::popVM( Instance *vm ) {
 	  cout << "Não achou" << endl;
 	  abort();
   }
-  cout << "****\n";
   vmM.erase(vmM.find(vm->getId()));
-  cout << "****\n";
 }
