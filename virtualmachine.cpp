@@ -8,7 +8,7 @@
 #include "node.h"
 #include "task.h"
 #include "user.h"
-#include "schedulepolice.h"
+#include "scheduler.h"
 
 using namespace std;
 
@@ -24,7 +24,7 @@ VM::VM(Node *node, User* owner ) :
 }
 
 void VM::suspend() {
-  SchedulePolice::localSchedule();
+  Scheduler::localSchedule();
   this->setStatus(suspended);
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( (*it)->getStatus() == running_t ) // Because a task can be suspended
@@ -36,7 +36,7 @@ void VM::suspend() {
 }
 
 void VM::resume() {
-  SchedulePolice::localSchedule();
+  Scheduler::localSchedule();
   getRunningHost()->pinCore( (taskL.size() >= getVCores())
 		             ? getVCores()
 		             : taskL.size() );
@@ -69,7 +69,7 @@ void VM::pushTask( Task *task ) {
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( *it == task ) { cout << "existe\n"; exit(0); }
   taskL.push_back(task);
-  SchedulePolice::localSchedule();
+  Scheduler::localSchedule();
   ++runningTasks;
 }
 
@@ -83,7 +83,7 @@ void VM::popTask( Task *task ) {
       taskL.erase(it);
       break;
     }
-  SchedulePolice::localSchedule();
+  Scheduler::localSchedule();
 }
 
 void VM::localSchedule() {

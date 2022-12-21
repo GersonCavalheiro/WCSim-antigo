@@ -2,12 +2,12 @@
 #include <list>
 
 #include "simulator.h"
-#include "schedulepolice.h"
 #include "host.h"
 #include "node.h"
 #include "cloud.h"
 #include "event.h"
 #include "globalclock.h"
+#include "scheduler.h"
 
 using namespace std;
 
@@ -53,7 +53,7 @@ void Simulator::run() {
        delete(ev);
       } else GlobalClock::set(GlobalClock::get()+1);
     }
-    SchedulePolice::localSchedule();
+    Scheduler::localSchedule();
     if( !(++nbEvents%100)) cout << nbEvents << endl;
   }
 

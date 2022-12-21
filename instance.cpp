@@ -3,7 +3,7 @@
 #include "instance.h"
 #include "host.h"
 #include "node.h"
-#include "schedulepolice.h"
+#include "scheduler.h"
 #include "task.h"
 #include "user.h"
 
@@ -17,8 +17,7 @@ Instance::Instance( Node *n, User *u, int vCores, int vMips, int vRam)
 	    vRam(vRam), nbTasks(0) {
   id = nbInstances++;
   instanceL.push_back(this);
-  //running = HostSelection::circular(*(owner->getNode()),*this);
-  running = SchedulePolice::hostSelection(*(owner->getNode()),*this);
+  running = Scheduler::hostSelection(*(owner->getNode()),*this);
   running->pushVM(this);
   setStatus(alive);
 }

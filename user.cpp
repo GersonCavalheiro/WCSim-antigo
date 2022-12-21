@@ -13,7 +13,6 @@
 #include "event.h"
 #include "globalclock.h"
 #include "virtualmachine.h"
-#include "schedulepolice.h"
 #include "filenames.h"
 
 using namespace std;

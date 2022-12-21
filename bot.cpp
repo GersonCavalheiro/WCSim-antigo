@@ -16,7 +16,6 @@
 #include "user.h"
 #include "cloud.h"
 #include "scheduler.h"
-#include "schedulepolice.h"
 #include "filenames.h"
 
 using namespace std;
@@ -64,11 +63,10 @@ void BoT::launch() {
   status = running_t;
   nbRunningTasks = tasksL.size();
   for( auto it = tasksL.begin() ; it != tasksL.end() ; ++it ) {
-    VM *vm = SchedulePolice::vmSelection(*owner, *(*it) );
+    VM *vm = Scheduler::vmSelection(*owner, *(*it) );
     vm->pushTask(*it);
     (*it)->setVMRunning(vm);
   }
-  //Scheduler::scheduleTaskOnVM(tasksL,*owner,SchedulePolice::vmSelection);
 }
 
 ostream& operator<<( ostream& out, const BoT& b ) {

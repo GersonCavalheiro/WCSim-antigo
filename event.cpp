@@ -7,7 +7,7 @@
 #include "user.h"
 #include "cloud.h"
 #include "host.h"
-#include "schedulepolice.h"
+#include "scheduler.h"
 #include "simulator.h"
 
 int Event::eventCount = 0;
@@ -192,7 +192,7 @@ void SenderInitiatedMigrationEv::execute() {
 
   if( sender->getVMMap().size() == 0 ) return;
   vm = sender->getVMMap()[0];
-  receiver = SchedulePolice::receiverSelection(*(vm->getRunningHost()));
+  receiver = Scheduler::receiverSelection(*(vm->getRunningHost()));
   vm->migrate(receiver);
   //new InstanceResumeEv(vm,GlobalClock::get()+Cloud::delay(vm,sender,receiver));
   new InstanceResumeEv(vm,GlobalClock::get()+1);
