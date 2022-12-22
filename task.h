@@ -51,6 +51,7 @@ public:
   static inline int getNbTasks() { return taskCount; }
   static inline int getRunningTasks() { return tasksRunning; }
   static inline int getCompletedTasks() { return tasksCompleted; }
+  static inline vector<Task*>& getTasksL() { return tasksL; }
   static void removeFromTaskList( Task *t );
   friend ostream& operator<<( ostream& out, const Task& t );
 };

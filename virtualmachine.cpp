@@ -24,7 +24,7 @@ VM::VM(Node *node, User* owner ) :
 }
 
 void VM::suspend() {
-  Scheduler::localSchedule();
+  //Scheduler::localSchedule();
   this->setStatus(suspended);
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( (*it)->getStatus() == running_t ) // Because a task can be suspended
@@ -36,7 +36,7 @@ void VM::suspend() {
 }
 
 void VM::resume() {
-  Scheduler::localSchedule();
+  //Scheduler::localSchedule();
   getRunningHost()->pinCore( (taskL.size() >= getVCores())
 		             ? getVCores()
 		             : taskL.size() );
@@ -69,7 +69,7 @@ void VM::pushTask( Task *task ) {
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( *it == task ) { cout << "existe\n"; exit(0); }
   taskL.push_back(task);
-  Scheduler::localSchedule();
+  //Scheduler::localSchedule();
   ++runningTasks;
 }
 
@@ -83,7 +83,7 @@ void VM::popTask( Task *task ) {
       taskL.erase(it);
       break;
     }
-  Scheduler::localSchedule();
+  //Scheduler::localSchedule();
 }
 
 void VM::localSchedule() {

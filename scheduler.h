@@ -10,6 +10,9 @@
 
 struct Scheduler {
   static inline void localSchedule() {
+    static int lastDataStamp = 0;
+    if( lastDataStamp == GlobalClock::get() ) return;
+    lastDataStamp = GlobalClock::get();
     auto it = Instance::getInstancesL().begin();
     for( ; it != Instance::getInstancesL().end() ; ++it )
       if( (*it)->getStatus() == alive )
