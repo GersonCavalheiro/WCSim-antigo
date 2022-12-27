@@ -64,11 +64,14 @@ public:
 		  setDataStamp();
   }
 
-  virtual void releaseCore(int c = 1) {
+  virtual void releaseCore(int c= 1) {
+	          cout << "O" << endl;
+	          cout << "Usage: " << this->getId() << endl;
                   Usage::update(this->getId(),
 				GlobalClock::get()-getDataStamp(),
 				(float)occupedCores/cores);
-	          occupedCores -= 1;
+	          occupedCores -= c;
+	          cout << "P" << endl;
 		  setDataStamp();
   }
 
@@ -80,6 +83,7 @@ public:
 	  { lastDataStamp = GlobalClock::get(); }
   int  getDataStamp() { return lastDataStamp; }
   friend ostream& operator<<( ostream& out, BareMetal& n );
+  inline friend bool operator==( BareMetal& a, BareMetal& b ) { return a.id == b.id; }
 };
 
 #endif

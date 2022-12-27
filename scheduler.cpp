@@ -12,10 +12,9 @@
 void Scheduler::nodeBalancer() {
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
   for( auto it = hosts->begin() ; it != hosts->end() ; ++it )
-    if( (*it)->getUtilizationRate() <= 0.5 ) {
-     cout << "Migrar: " << (*it)->getHostName() << endl;     
+    if( (*it)->getUtilizationRate() <= 0.5 && (*it)->getVMMap().size() > 1 ) {
      auto vm = ((*it)->getVMMap().begin())->second;
-     auto receiver = Scheduler::receiverNodeSelection(*(vm->getRunningHost()));
+     auto receiver = Scheduler::receiverNodeSelection(*(Host*)(*it));
      vm->migrate(receiver);
      new InstanceResumeEv(vm,GlobalClock::get()+1);
     }
@@ -24,12 +23,11 @@ void Scheduler::nodeBalancer() {
 void Scheduler::cloudBalancer() {
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
   for( auto it = hosts->begin() ; it != hosts->end() ; ++it )
-    if( (*it)->getUtilizationRate() <= 0.25 ) {
-     cout << "Migrar: " << (*it)->getHostName() << endl;     
+    if( (*it)->getUtilizationRate() <= 0.5 && (*it)->getVMMap().size() > 1 ) {
      auto vm = ((*it)->getVMMap().begin())->second;
-     auto receiver = Scheduler::receiverCloudSelection(*(vm->getRunningHost()));
+     auto receiver = Scheduler::receiverCloudSelection(*(Host*)(*it));
      vm->migrate(receiver);
-     new InstanceResumeEv(vm,GlobalClock::get()+10);
+     new InstanceResumeEv(vm,GlobalClock::get()+1);
     }
 }
 
@@ -53,7 +51,7 @@ Host *Scheduler::receiverNodeSelection( Host& sender ) {
 }
 
 Host *Scheduler::receiverCloudSelection( Host& sender ) {
-  abort();
+  
   return VMMigrationHostSelection::randomNodeReceiver(sender);
 }
 
@@ -155,17 +153,17 @@ Host* HostSelection::bestFit( Node& node, Instance& vm ) { return (Host*) NULL; 
 Host* HostSelection::worstFit( Node& node, Instance& vm ) { return (Host*) NULL; }
 
 Host* VMMigrationHostSelection::randomNodeReceiver( Host& source ) { 
-  int n = rand()%(source.getNode()->getHostsList().size());
+  if( source.getNode()->getHostsList().size() == 1 ) return (Host*)NULL;
+  int n = rand()%(source.getNode()->getHostsList().size()-1);
   Host *choice = source.getNode()->getHostsList()[n];
-  if( choice >= &source ) choice = source.getNode()->getHostsList()[n];
+  if( *choice == source ) choice = source.getNode()->getHostsList()[n+1];
   return (Host*) choice;
 }
 
 Host* VMMigrationHostSelection::randomCloudReceiver( Host& source ) { 
-  int n = rand()%(source.getNode().getNodesList().size()-1);
-  if( source.getNode()->getId() == n ) ++n;
-  int h = rand()%source.getNode()->getNodesList().size();
-  Host *choice = source.getNode()->getNodesList()[n].getHostsList()[n];
+  int n = rand()%(Host::getHostsCount()-1);
+  if( source.getId() == n ) ++n;
+  Host *choice = Host::getHostPtrById(n);
   return (Host*) choice;
 }
 
@@ -173,13 +171,15 @@ Host* VMMigrationHostSelection::circularNodeReceiver( Host& source ) {
   return (Host*) NULL;
 }
 
-Host* VMMigrationHostSelection::randomGlobalReceiver( Host& source ) { 
+/*
+ * Host* VMMigrationHostSelection::randomCloudReceiver( Host& source ) { 
   int n = rand()%(Host::getNbHosts()-1);
   if( n >= source.getId() ) ++n;
   return (Host*) Host::getHostPtrById(n);
 }
+*/
 
-Host* VMMigrationHostSelection::circularGlobalReceiver( Host& source ) { 
+Host* VMMigrationHostSelection::circularCloudReceiver( Host& source ) { 
   static int n = 0;
   if( n == source.getId() ) ++n;
   if( n >= Host::getNbHosts() ) n = 0;

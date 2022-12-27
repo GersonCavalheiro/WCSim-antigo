@@ -21,18 +21,23 @@ VM::VM(Node *node, User* owner ) :
     Instance(node, owner) {
 #endif
   componentName = strdup(__func__);
+  setRunningHost(node->selectHost());
+  getRunningHost()->pushVM(this); 
 }
 
 void VM::suspend() {
-  //Scheduler::localSchedule();
+  cout << "Suspendendo: " << getRunningHost()->getName() << endl;
   this->setStatus(suspended);
+  cout << "L" << endl;
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
     if( (*it)->getStatus() == running_t ) // Because a task can be suspended
       (*it)->setStatus(blocked_t);        // by another scheduling decision
 
+  cout << "M" << endl;
   getRunningHost()->releaseCore( (taskL.size() >= getVCores())
 		                 ? getVCores()
 		                 : taskL.size() );
+  cout << "N" << endl;
 }
 
 void VM::resume() {
@@ -54,10 +59,14 @@ void VM::migrate( int hostId ) {
 }
 
 void VM::migrate( Host *receiver ) {
+  cout << "Migrando daqui: " << getRunningHost()->getName() << " para " << receiver->getName() << endl;
   suspend();
+  cout << "Suspensa\n";
   getRunningHost()->popVM(this);
+  cout << "Sai do meu host\n";
   setRunningHost(receiver);
   receiver->pushVM(this);
+  cout << "entrei no novo host\n";
 }
 
 void VM::pushTask( Task *task ) {

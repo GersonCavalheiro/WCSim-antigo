@@ -59,8 +59,5 @@ Node *Node::getNode(string name) {
 }
 
 Host *Node::selectHost() {
-  auto it = hostsL.begin();
-  ++it;
-  return *it;
-  return *(hostsL.begin()++);
+  return *hostsL.begin();
 }

@@ -54,10 +54,6 @@ void User::billing( int host, int nbInst ) {
 bool User::rentNewVMs( int n ) {
   if( n <= 0 ) return false;
 
-  // AQUI MAPEAMENTO VMs 
-  auto host = myNode->selectHost();
-  // FIM
-
   for( ; n > 0 ; --n ) {
     auto vm = VM::createNewVM(this);
     myVMPool.push_back(vm);

@@ -26,7 +26,8 @@ class Host : public BareMetal {
 
 public:
   Host( const string name, const int risingDate, int cores = 4, int mips = 100000, int ram = 16, int storage = INT_MAX, bool gpu = false );
-  inline int    getId()               const { return id; }
+  inline int    getId()                const { return id; }
+  static inline int    getHostsCount() { return hostCount; }
   static string getName(int id)       { return hostsListById[id]->getName(); }
   static string getNodeName(int id)       { return hostsListById[id]->getNodeName(); }
   inline int    getHostNb(int hostId) const

@@ -30,9 +30,8 @@ public:
   static Node *getNode(string name);
   inline int getId() { return id; }
   inline string getName() { return name; }
-  static vector<Node*>& getNodesL() { return nodesL; }
+  static vector<Node*>& getNodesList() { return nodesL; }
 
-  static vector<Node*>& getNodeList() { return nodesL; } 
   Host *selectHost();
 };
 
