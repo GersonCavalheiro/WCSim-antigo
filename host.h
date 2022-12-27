@@ -77,7 +77,7 @@ public:
 
 class PublicHost : public Host {
 public:
-  PublicHost( const string name, const int risingDate, int cores = 48, int mips = 500000, int ram = 2048, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) { family = 100; }
+  PublicHost( const string name, const int risingDate, int cores = 48, int mips = 100000, int ram = 2048, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) { family = 100; }
   inline bool isPublic() const { return true; }
 };
 

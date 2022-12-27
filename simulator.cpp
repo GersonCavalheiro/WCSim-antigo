@@ -29,24 +29,7 @@ void Simulator::run() {
   GlobalClock::set(eventL.front()->getDate());
   GlobalClock::set(0);
 
-  /*
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(0),1000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(1),2000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(2),3000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(3),4000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(4),5000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(5),6000);
-
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(0),10000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(1),20000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(2),30000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(3),40000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(4),50000);
-  new SenderInitiatedMigrationEv(Host::getHostPtrById(5),60000);
-*/
-
   while( !eventL.empty() || BoT::undoneBoTs() > 0 ) {
-  //while( !eventL.empty() || Cloud::uncompletedTasks() > 0 ) {
     if( !eventL.empty() ) {
       Event* ev = eventL.front();
       if( ev->getDate() == GlobalClock::get() ) {
@@ -61,13 +44,13 @@ void Simulator::run() {
 //    if( !(GlobalClock::get()%100)) cout << "Size = " << eventL.size() << " [" << GlobalClock::get() << ":" << nbEvents << "]" << endl;
     if( !(GlobalClock::get()%300) ) {
       cout << "[" << GlobalClock::get() << "]" << endl;
-      //Scheduler::nodeBalancer();
+      Scheduler::nodeBalancer();
     } 
-    if( !(GlobalClock::get()%600) ) {
+    if( !(GlobalClock::get()%300) ) {
       cout << "[" << GlobalClock::get() << "]" << endl;
-    //  Scheduler::cloudBalancer();
+      Scheduler::cloudBalancer();
     }
-    if( !(GlobalClock::get()%1200) ) {
+    if( !(GlobalClock::get()%300) ) {
       cout << "[" << GlobalClock::get() << "]" << endl;
       Scheduler::cloudBursting();
     }
