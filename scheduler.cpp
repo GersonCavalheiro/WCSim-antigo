@@ -48,14 +48,14 @@ void Scheduler::cloudBursting() {
 
 VM *Scheduler::vmSelection( User& owner, Task& task ) {
   return VMSelection::random(owner,task);
-  return VMSelection::circular(owner,task);
   return VMSelection::fixed(owner,task);
+  return VMSelection::circular(owner,task);
 }
 
 Host *Scheduler::hostSelection( Node& node, Instance& vm ) {
  return HostSelection::random(node,vm);
- return HostSelection::circular(node,vm);
  return HostSelection::fixed(node,vm);
+ return HostSelection::circular(node,vm);
 }
 
 Host *Scheduler::receiverNodeSelection( Host& sender ) {
