@@ -7,6 +7,7 @@
 #include "cloud.h"
 #include "event.h"
 #include "globalclock.h"
+#include "loadevaluator.h"
 #include "scheduler.h"
 
 using namespace std;
@@ -44,7 +45,8 @@ void Simulator::run() {
   new SenderInitiatedMigrationEv(Host::getHostPtrById(5),60000);
 */
 
-  while( !eventL.empty() || Cloud::uncompletedTasks() > 0 ) {
+  while( !eventL.empty() || BoT::undoneBoTs() > 0 ) {
+  //while( !eventL.empty() || Cloud::uncompletedTasks() > 0 ) {
     if( !eventL.empty() ) {
       Event* ev = eventL.front();
       if( ev->getDate() == GlobalClock::get() ) {
@@ -56,7 +58,11 @@ void Simulator::run() {
       } else GlobalClock::set(GlobalClock::get()+1);
     }
     Scheduler::localSchedule();
-    if( !(GlobalClock::get()%100)) cout << "Size = " << eventL.size() << " [" << GlobalClock::get() << ":" << nbEvents << "]" << endl;
+//    if( !(GlobalClock::get()%100)) cout << "Size = " << eventL.size() << " [" << GlobalClock::get() << ":" << nbEvents << "]" << endl;
+    if( !(GlobalClock::get()%600) ) {
+      cout << "[" << GlobalClock::get() << "]" << endl;
+      Scheduler::nodeBalancer();
+    }
   }
 
   cout << "Uncompleted tasks: " << Cloud::uncompletedTasks() << endl;

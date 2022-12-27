@@ -1,5 +1,5 @@
 NAME = main
-INPUTFILES = sipht_g mycloud_g passwd_g network_g
+INPUTFILES = sipht_g cloud0 passwd_g network_g
 SOURCES = $(wildcard *.cpp)
 OBJS = $(SOURCES:.cpp=.o)
 INCLUDES = $(wildcard *.h)

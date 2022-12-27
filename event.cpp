@@ -62,6 +62,7 @@ void BoTFinishEv::execute() {
   //cout << "BoT (" << bot->getId() << ") Finish\n";
   Simulator::lastBoTFinishDate = date;
   bot->getOwnerPtr()->setLastBoTFinishDate(date);
+  BoT::aBoTFinish();
 }
 
 string BoTFinishEv::eventName() {
@@ -194,7 +195,7 @@ void SenderInitiatedMigrationEv::execute() {
 
   if( sender->getVMMap().size() == 0 ) return;
   vm = sender->getVMMap()[0];
-  receiver = Scheduler::receiverSelection(*(vm->getRunningHost()));
+  receiver = Scheduler::receiverNodeSelection(*(vm->getRunningHost()));
   vm->migrate(receiver);
   //new InstanceResumeEv(vm,GlobalClock::get()+Cloud::delay(vm,sender,receiver));
   new InstanceResumeEv(vm,GlobalClock::get()+1);

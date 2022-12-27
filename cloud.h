@@ -2,6 +2,7 @@
 #define __cloud_h__
 
 #include <vector>
+#include <map>
 
 #include "host.h"
 #include "baremetal.h"
@@ -10,6 +11,7 @@
 
 class Cloud : public Component {
   static vector<vector<int>> link;
+  static map<string,vector<BareMetal*>*> nodesM;
 public:
   // n: number of hosts
   // c: number of cores per host
@@ -22,14 +24,16 @@ public:
   static int getLinkSpeed( int source, vector<int>& vSpeeds );
   static void deploy();
   static int  bandwidth(int source, int destination);
-  static inline Host* getHostPtrById( int hostId )  { return Host::getHostPtrById( hostId ); }
+  static Host* getHostPtrById( int hostId );
 
   static inline int uncompletedTasks() { return Task::getNbTasks() - Task::getCompletedTasks(); }
 
   static void printAllLinks();
   static void printAllCloud();
+  static void pushHost(string name, BareMetal *host);
   static Node *getNode(string name);
   static int delay( Instance *vm, Host *src, Host *dst );
+  static map<string,vector<BareMetal*>*>& getNodesM() { return nodesM; }
 };
 
 #endif

@@ -10,10 +10,34 @@
 #include "filenames.h"
 
 vector<vector<int>> Cloud::link;
+map<string,vector<BareMetal*>*> Cloud::nodesM;
 
 Host* Cloud::newHost( const string name, const int risingDate, const int bmFamily ) {
   // O parametro bmFamily permite escolher qual classe Host usar
-  return new Host(name, risingDate);
+  Host *host;
+  switch(bmFamily) {
+   case 0: host = (Host*) new ThinHost(name,risingDate);
+	   break;
+   case 1: host = (Host*) new MediumHost(name,risingDate);
+	   break;
+   case 2: host = (Host*) new LargeHost(name,risingDate);
+	   break;
+   default : host = new Host(name, risingDate);
+  }
+  pushHost(name,(BareMetal*)host);
+  return host;
+}
+
+Host* Cloud::getHostPtrById( int hostId )  { return Host::getHostPtrById( hostId ); }
+
+
+void Cloud::pushHost(string name, BareMetal *host) {
+  auto it = nodesM.find(name);
+  if( it == nodesM.end() ) {
+    nodesM.insert(pair<string,vector<BareMetal*>*>(name,new vector<BareMetal*>));
+    it = nodesM.find(name);
+  }
+  it->second->push_back(host);
 }
 
 Node *Cloud::getNode(string name) {
@@ -25,11 +49,10 @@ void Cloud::readCloudFile( string cloudFileName ) {
   int hostRisingDate, bmFamily;
   std::ifstream infile(FileNames::getCloudFileName());
 
-  infile >> name;
+  infile >> name >> hostRisingDate >> bmFamily;
   while( !infile.eof() ) {
-    infile >> hostRisingDate >> bmFamily;
     Cloud::newHost(name, hostRisingDate, bmFamily);
-    infile >> name;
+    infile >> name >> hostRisingDate >> bmFamily;
   }
 }
 
@@ -93,9 +116,12 @@ void Cloud::deploy() {
 }
 
 void Cloud::printAllCloud() {
-  cout << "****" << endl;
-  Host::printAllHosts();
-  cout << "****" << endl;
+  for( auto it = nodesM.begin() ; it != nodesM.end() ; ++it ) {
+    cout << (*it).first << ":\t";
+    for( auto jt = (*it).second->begin() ; jt != (*it).second->end() ; ++jt )
+      cout << "\t" << *(*jt) << " ";
+    cout << endl;
+  }
 }
 
 int Cloud::delay( Instance *vm, Host *src, Host *dst ) {

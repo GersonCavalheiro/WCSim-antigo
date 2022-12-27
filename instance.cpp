@@ -42,7 +42,7 @@ void Instance::avanceTask( Task *t ) {
   if( getStatus() != alive ) abort();
   auto actualMips = (running->getActualMips() < this->getVMips())
                     ? running->getActualMips()
-                    : this->getVMips() * running->utilizationRate();
+                    : this->getVMips() * running->getUtilizationRate();
   int executed = actualMips * (GlobalClock::get() - t->getDataStamp());
   t->hup( executed );
   this->getOwner()->billing(running->getId(),executed);

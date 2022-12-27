@@ -77,5 +77,7 @@ int main( int argc, char **argv) {
   chrono::duration<double> elapsed = end - start;
   cout << "Simulation time: " << elapsed.count() << "s" << endl;
 
+  Cloud::printAllCloud();
+
   return 0;
 }

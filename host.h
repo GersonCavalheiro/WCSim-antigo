@@ -7,6 +7,7 @@
 
 #include "utils.h"
 #include "baremetal.h"
+#include "cloud.h"
 #include "task.h"
 #include "virtualmachine.h"
 #include "component.h"
@@ -16,16 +17,15 @@ class Host : public BareMetal {
   static map<int,Host*>    hostsListById;
   static map<string,Host*> hostsListByName;
   static int hostCount;
-  //vector<Instance*> vmL;
   map<int,Instance*> vmM;
   list<Task*> taskList; // Lista de tarefas prontas
   int nbCores;
-  int id, risingDate, status;
-  string nodeName, hostName;
+  //int id, risingDate, status;
+  //string nodeName, hostName;
   char *className;
 
 public:
-  Host( const string name, const int risingDate );
+  Host( const string name, const int risingDate, int cores = 4, int mips = 100000, int ram = 16, int storage = INT_MAX, bool gpu = false );
   inline int    getId()               const { return id; }
   static string getName(int id)       { return hostsListById[id]->getName(); }
   static string getNodeName(int id)       { return hostsListById[id]->getNodeName(); }
@@ -37,6 +37,7 @@ public:
   inline void   setStatus( int st )         { status = st; }
   inline string getName() const             { return hostName; }
   inline string getNodeName() const { return nodeName; }
+  Node  *getNode();
   inline int    getNbVMs()            const { return vmM.size(); }
 //  inline vector<Instance*>&   getVMList()         { return vmL; }
   inline map<int,Instance*>&   getVMMap()         { return vmM; }
@@ -53,10 +54,26 @@ public:
   static Host* getHostPtrById( int hostId );
   static void insertHostInLists( Host *n );
 
-  friend ostream& operator<<( ostream& out, Host& n );
+  //friend ostream& operator<<( ostream& out, Host& n );
   static void printAllHosts();
   void printStatus();
 };
+
+class ThinHost : public Host {
+public:
+  ThinHost( const string name, const int risingDate, int cores = 4, int mips = 100000, int ram = 16, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) {}
+};
+
+class MediumHost : public Host {
+public:
+  MediumHost( const string name, const int risingDate, int cores = 12, int mips = 100000, int ram = 256, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) {}
+};
+
+class LargeHost : public Host {
+public:
+  LargeHost( const string name, const int risingDate, int cores = 24, int mips = 100000, int ram = 512, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) {}
+};
+
 
 #endif
 

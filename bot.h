@@ -22,7 +22,7 @@ class User;
 
 class BoT : public Component {
   static map<int,BoT*> botsM; // <botId,ptr>
-  static int botCount;
+  static int botCount, botFinished;
   int botNum, id;  // internal BoT number (sequential), user privided identification
   vector<int>   initialAttribs;
   vector<BoT*>  successors;
@@ -64,6 +64,8 @@ public:
   inline void setSuccessor( BoT* b ) { successors.push_back(b); }
   inline void setReady() { status = ready_t; }
 
+  static inline void aBoTFinish() { ++botFinished; }
+  static inline int  undoneBoTs() { return botCount - botFinished; }
   static void extractBoTAttributes(vector<int>& attr, string& strIn );
   static void buildBoT( string& attribs );
   static void makeBoTDependences();

@@ -21,7 +21,8 @@
 using namespace std;
 
 map<int,BoT*> BoT::botsM;
-int           BoT::botCount = 0;
+int           BoT::botCount    = 0;
+int           BoT::botFinished = 0;
 
 BoT::BoT(vector<int>& attr) : initialAttribs(attr) {
   componentName = strdup(__func__);
@@ -45,10 +46,8 @@ void BoT::aTaskCompleted() {
   //cout << "BoT("<<getId()<<") a task completed\n";
   ++nbCompletedTasks;
   --nbRunningTasks;
-  if( nbCompletedTasks == initialAttribs[nbTasks] ) {
-    //cout << "BoT("<<getId()<<") solving dependences\n";
+  if( nbCompletedTasks == initialAttribs[nbTasks] )
     new BoTFinishEv(this);
-  }
 }
 
 void BoT::dependenceSatisfied() {

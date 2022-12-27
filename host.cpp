@@ -15,11 +15,14 @@ map<int,Host*>    Host::hostsListById;
 map<string,Host*> Host::hostsListByName;
 int Host::hostCount = 0;
 
-Host::Host( const string name, const int risingDate )
-     : nodeName(name), risingDate(risingDate) {
+Host::Host( const string name, const int risingDate, int cores,
+	    int mips, int ram, int storage, bool gpu )
+     : BareMetal(cores,mips,ram,storage,gpu) {
   char aux[4];
   componentName = strdup(__func__);
   id = hostCount++;
+  this->risingDate = risingDate;
+  nodeName = name;
   hostName = nodeName + "H" + itoa(id,aux,10);
 
   insertHostInLists(this);
@@ -39,9 +42,13 @@ void Host::insertHostInLists( Host *n ) {
   hostsListByName.insert(pair<string,Host*>(n->getName(),n));
 }
 
-ostream& operator<<( ostream& out, Host& n ) {
+/* ostream& operator<<( ostream& out, Host& n ) {
   out << "[" << n.id << "|" << n.hostName << "]";
   return out;
+}*/
+
+Node* Host::getNode() {
+  return Cloud::getNode(nodeName);
 }
 
 void Host::printStatus() { 

@@ -16,11 +16,15 @@ struct Scheduler {
     auto it = Instance::getInstancesL().begin();
     for( ; it != Instance::getInstancesL().end() ; ++it )
       if( (*it)->getStatus() == alive )
-         (*it)->localSchedule();
+	 (*it)->localSchedule();
   }
+  static void  nodeBalancer();
+  static void  cloudBalancer();
+  static void  cloudBursting();
   static VM*   vmSelection( User& owner, Task& task );
   static Host* hostSelection( Node& node, Instance& vm );
-  static Host* receiverSelection( Host& sender );
+  static Host* receiverNodeSelection( Host& sender );
+  static Host* receiverCloudSelection( Host& sender );
 };
 
 struct VMSelection {
@@ -41,9 +45,15 @@ struct HostSelection {
   static Host* worstFit( Node& node, Instance& vm );
 };
 
-struct VMMigration {
-  static Host* randomReceiver( Host& sender );
-  static Host* circularReceiver( Host& sender );
+struct VMMigrationHostSelection {
+  static Host* randomNodeReceiver( Host& sender );
+  static Host* circularNodeReceiver( Host& sender );
+  static Host* randomCloudReceiver( Host& sender );
+  static Host* circularCloudReceiver( Host& sender );
+};
+
+struct VMMigrationVMSelection {
+  static VM* random( Host& sender );
 };
 
 #endif

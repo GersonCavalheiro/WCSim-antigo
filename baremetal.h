@@ -2,6 +2,8 @@
 #define __baremetal_h__
 
 #include <climits>
+#include <map>
+
 #include "component.h"
 #include "virtualmachine.h"
 #include "usage.h"
@@ -12,6 +14,9 @@ private:
   int  occupedCores, occupedRam, occupedStorage;
   int  lastDataStamp;
   bool pinnedGpu;
+protected:
+  string nodeName, hostName;
+  int    id, risingDate, status;
 public:
   /* Default:
    *         4 cores            (number of cores)
@@ -27,6 +32,10 @@ public:
     pinnedGpu = false;
   }
   inline virtual int   getId() const = 0;
+  inline string getHostName() const
+                           { return hostName; }
+  inline string getNodeName() const
+                           { return nodeName; }
   inline virtual int   getCores() const
                            { return cores; }
   inline virtual int   getMips() const
@@ -39,14 +48,14 @@ public:
                            { return false; }
   inline virtual int   getStorage() const
                            { return storage; }
-  inline virtual float utilizationRate() const
+  inline virtual float getUtilizationRate() const 
                            { return (cores >= occupedCores)
 				    ? 1.0
 				    : (float)cores/occupedCores; }
   inline virtual int   getActualMips() const
-                           { return mips*this->utilizationRate(); }
+                           { return mips*this->getUtilizationRate(); }
   inline virtual int   miDelivered(int t) const
-                           { return this->utilizationRate()*mips*t; }
+                           { return this->getUtilizationRate()*mips*t; }
   virtual void pinCore(int c = 1) {
                   Usage::update(this->getId(),
 				GlobalClock::get()-getDataStamp(),
@@ -66,9 +75,11 @@ public:
   virtual void place( Instance *vm );
   virtual void unplace( Instance *vm );
   virtual bool fitRam( Instance *vm );
+  virtual  inline map<int,Instance*>&   getVMMap() = 0;
   void setDataStamp()
 	  { lastDataStamp = GlobalClock::get(); }
   int  getDataStamp() { return lastDataStamp; }
+  friend ostream& operator<<( ostream& out, BareMetal& n );
 };
 
 #endif
