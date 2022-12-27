@@ -56,4 +56,5 @@ struct VMMigrationVMSelection {
   static VM* random( Host& sender );
 };
 
+
 #endif

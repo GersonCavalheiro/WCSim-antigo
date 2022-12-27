@@ -11,6 +11,7 @@
 
 vector<vector<int>> Cloud::link;
 map<string,vector<BareMetal*>*> Cloud::nodesM;
+vector<BareMetal*> Cloud::publicHostsL;
 
 Host* Cloud::newHost( const string name, const int risingDate, const int bmFamily ) {
   // O parametro bmFamily permite escolher qual classe Host usar
@@ -22,14 +23,17 @@ Host* Cloud::newHost( const string name, const int risingDate, const int bmFamil
 	   break;
    case 2: host = (Host*) new LargeHost(name,risingDate);
 	   break;
+   case 100: host = (Host*) new PublicHost(name,risingDate);
+             pushPublicHost(name,(BareMetal*)host);
+	     break;
    default : host = new Host(name, risingDate);
   }
   pushHost(name,(BareMetal*)host);
+  cout << "Criei: " << name << endl;
   return host;
 }
 
 Host* Cloud::getHostPtrById( int hostId )  { return Host::getHostPtrById( hostId ); }
-
 
 void Cloud::pushHost(string name, BareMetal *host) {
   auto it = nodesM.find(name);
@@ -38,6 +42,10 @@ void Cloud::pushHost(string name, BareMetal *host) {
     it = nodesM.find(name);
   }
   it->second->push_back(host);
+}
+
+void Cloud::pushPublicHost(string name, BareMetal *host) {
+  publicHostsL.push_back(host);
 }
 
 Node *Cloud::getNode(string name) {

@@ -62,17 +62,23 @@ public:
 
 class ThinHost : public Host {
 public:
-  ThinHost( const string name, const int risingDate, int cores = 4, int mips = 100000, int ram = 16, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) {}
+  ThinHost( const string name, const int risingDate, int cores = 4, int mips = 100000, int ram = 16, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) { family = 0; }
 };
 
 class MediumHost : public Host {
 public:
-  MediumHost( const string name, const int risingDate, int cores = 12, int mips = 100000, int ram = 256, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) {}
+  MediumHost( const string name, const int risingDate, int cores = 12, int mips = 100000, int ram = 256, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) { family = 1; }
 };
 
 class LargeHost : public Host {
 public:
-  LargeHost( const string name, const int risingDate, int cores = 24, int mips = 100000, int ram = 512, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) {}
+  LargeHost( const string name, const int risingDate, int cores = 24, int mips = 100000, int ram = 512, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) { family = 2; }
+};
+
+class PublicHost : public Host {
+public:
+  PublicHost( const string name, const int risingDate, int cores = 48, int mips = 500000, int ram = 2048, int storage = INT_MAX, bool gpu = false ) : Host(name,risingDate,cores,mips,ram,storage,gpu) { family = 100; }
+  inline bool isPublic() const { return true; }
 };
 
 

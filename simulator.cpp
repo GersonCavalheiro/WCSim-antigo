@@ -59,9 +59,17 @@ void Simulator::run() {
     }
     Scheduler::localSchedule();
 //    if( !(GlobalClock::get()%100)) cout << "Size = " << eventL.size() << " [" << GlobalClock::get() << ":" << nbEvents << "]" << endl;
+    if( !(GlobalClock::get()%300) ) {
+      cout << "[" << GlobalClock::get() << "]" << endl;
+      //Scheduler::nodeBalancer();
+    } 
     if( !(GlobalClock::get()%600) ) {
       cout << "[" << GlobalClock::get() << "]" << endl;
-      Scheduler::nodeBalancer();
+    //  Scheduler::cloudBalancer();
+    }
+    if( !(GlobalClock::get()%1200) ) {
+      cout << "[" << GlobalClock::get() << "]" << endl;
+      Scheduler::cloudBursting();
     }
   }
 
