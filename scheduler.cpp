@@ -16,22 +16,34 @@ void Scheduler::nodeBalancer() {
      auto vm = ((*it)->getVMMap().begin())->second;
      auto receiver = Scheduler::receiverNodeSelection(*(Host*)(*it));
      vm->migrate(receiver);
-     new InstanceResumeEv(vm,GlobalClock::get()+1);
+     new InstanceResumeEv(vm,GlobalClock::get()+10);
     }
 }
 
 void Scheduler::cloudBalancer() {
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
   for( auto it = hosts->begin() ; it != hosts->end() ; ++it )
-    if( (*it)->getUtilizationRate() <= 0.5 && (*it)->getVMMap().size() > 1 ) {
-     auto vm = ((*it)->getVMMap().begin())->second;
-     auto receiver = Scheduler::receiverCloudSelection(*(Host*)(*it));
-     vm->migrate(receiver);
-     new InstanceResumeEv(vm,GlobalClock::get()+1);
+    if( (*it)->getUtilizationRate() <= 0.5
+        && (*it)->getFamily() < 100
+	&& (*it)->getVMMap().size() > 1 ) {
+      auto vm = ((*it)->getVMMap().begin())->second;
+      auto receiver = Scheduler::receiverCloudSelection(*(Host*)(*it));
+      vm->migrate(receiver);
+      new InstanceResumeEv(vm,GlobalClock::get()+60);
     }
 }
 
 void Scheduler::cloudBursting() {
+  vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
+  for( auto it = hosts->begin() ; it != hosts->end() ; ++it )
+    if( (*it)->getUtilizationRate() <= 0.5
+        && (*it)->getFamily() < 100
+	&& (*it)->getVMMap().size() > 1 ) {
+      auto vm = ((*it)->getVMMap().begin())->second;
+      auto receiver = Cloud::getPublicHostsL()[rand()%Cloud::getPublicHostsL().size()];
+      vm->migrate((Host*)receiver);
+      new InstanceResumeEv(vm,GlobalClock::get()+60);
+    }
 }
 
 VM *Scheduler::vmSelection( User& owner, Task& task ) {
@@ -161,11 +173,14 @@ Host* VMMigrationHostSelection::randomNodeReceiver( Host& source ) {
 }
 
 Host* VMMigrationHostSelection::randomCloudReceiver( Host& source ) { 
-  int n = rand()%(Host::getHostsCount()-1);
-  if( source.getId() == n ) ++n;
-  Host *choice = Host::getHostPtrById(n);
+  Host *choice;
+  do {
+    int n = rand()%(Host::getHostsCount()-1);
+    if( source.getId() == n ) ++n;
+    choice = Host::getHostPtrById(n);
+  } while( choice->getFamily() < 100 );
   return (Host*) choice;
-}
+} 
 
 Host* VMMigrationHostSelection::circularNodeReceiver( Host& source ) {
   return (Host*) NULL;

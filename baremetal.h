@@ -16,7 +16,7 @@ private:
   bool pinnedGpu;
 protected:
   string nodeName, hostName;
-  int    id, risingDate, status;
+  int    id, risingDate, status, family;
 public:
   /* Default:
    *         4 cores            (number of cores)
@@ -30,6 +30,7 @@ public:
          ram(ram*cores), storage(storage), gpu(gpu) {
     lastDataStamp = occupedRam = occupedCores = occupedStorage = 0;
     pinnedGpu = false;
+    family = 0;
   }
   inline virtual int   getId() const = 0;
   inline string getHostName() const
@@ -48,6 +49,8 @@ public:
                            { return false; }
   inline virtual int   getStorage() const
                            { return storage; }
+  inline virtual int   getFamily() const
+                           { return family; }
   inline virtual float getUtilizationRate() const 
                            { return (cores >= occupedCores)
 				    ? 1.0
@@ -78,6 +81,7 @@ public:
   virtual void place( Instance *vm );
   virtual void unplace( Instance *vm );
   virtual bool fitRam( Instance *vm );
+  virtual bool isPublic() const { return false; }
   virtual  inline map<int,Instance*>&   getVMMap() = 0;
   void setDataStamp()
 	  { lastDataStamp = GlobalClock::get(); }
