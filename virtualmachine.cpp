@@ -21,8 +21,9 @@ VM::VM(Node *node, User* owner ) :
     Instance(node, owner) {
 #endif
   componentName = strdup(__func__);
-  setRunningHost(node->selectHost());
-  getRunningHost()->pushVM(this); 
+  //setRunningHost(node->selectHost());
+  //setRunningHost(Scheduler::hostSelection(*node,*this));
+  //getRunningHost()->pushVM(this); 
 }
 
 void VM::suspend() {
@@ -88,10 +89,13 @@ void VM::popTask( Task *task ) {
 }
 
 void VM::localSchedule() {
+  int runningTasks = 0;
   if( getStatus() != alive ) return;
+  for( auto it = taskL.begin() ; it != taskL.end() ; ++it )
+     if( (*it)->getStatus() == running_t) ++runningTasks;
   for( auto it = taskL.begin() ; it != taskL.end() ; ++it ) {
     if( (*it)->getStatus() == running_t ) {
-      this->avanceTask(*it);
+      this->avanceTask(*it,runningTasks);
       (*it)->setDataStamp();
       if( (*it)->getRemainingInstructions() <= 0 )
         new TaskFinishEv( *it, GlobalClock::get() );

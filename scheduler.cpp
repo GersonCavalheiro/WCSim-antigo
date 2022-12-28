@@ -11,39 +11,51 @@
 
 void Scheduler::nodeBalancer() {
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
-  for( auto it = hosts->begin() ; it != hosts->end() ; ++it )
+  for( auto it = hosts->begin() ; it != hosts->end() ; ++it ) {
+    if( (Host*)(*it)->isPublic() ) continue;
     if( (*it)->getUtilizationRate() <= 0.5 && (*it)->getVMMap().size() > 1 ) {
      auto vm = ((*it)->getVMMap().begin())->second;
      auto receiver = Scheduler::receiverNodeSelection(*(Host*)(*it));
+     cout << "A Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName()  << " (" << vm->getRunningHost()->getName() << ")" << endl;
      vm->migrate(receiver);
-     new InstanceResumeEv(vm,GlobalClock::get()+10);
+     cout << "A Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName()  << " (" << vm->getRunningHost()->getName() << ")" << endl;
+     new InstanceResumeEv(vm,GlobalClock::get()+2);
     }
+  }
 }
 
 void Scheduler::cloudBalancer() {
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
-  for( auto it = hosts->begin() ; it != hosts->end() ; ++it )
+  for( auto it = hosts->begin() ; it != hosts->end() ; ++it ) {
+    if( (Host*)(*it)->isPublic() ) continue;
     if( (*it)->getUtilizationRate() <= 0.5
-        && (*it)->getFamily() < 100
+        && (*it)->isPublic() == false
 	&& (*it)->getVMMap().size() > 1 ) {
       auto vm = ((*it)->getVMMap().begin())->second;
       auto receiver = Scheduler::receiverCloudSelection(*(Host*)(*it));
+     cout << "B Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName() << " (" << vm->getRunningHost()->getName() << ")" << endl;
       vm->migrate(receiver);
-      new InstanceResumeEv(vm,GlobalClock::get()+60);
+     cout << "B Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName() << " (" << vm->getRunningHost()->getName() << ")" << endl;
+      new InstanceResumeEv(vm,GlobalClock::get()+10);
     }
+  }
 }
 
 void Scheduler::cloudBursting() {
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
-  for( auto it = hosts->begin() ; it != hosts->end() ; ++it )
+  for( auto it = hosts->begin() ; it != hosts->end() ; ++it ) {
+    if( (Host*)(*it)->isPublic() ) continue;
     if( (*it)->getUtilizationRate() <= 0.5
-        && (*it)->getFamily() < 100
+        && (*it)->isPublic() == false
 	&& (*it)->getVMMap().size() > 1 ) {
       auto vm = ((*it)->getVMMap().begin())->second;
       auto receiver = Cloud::getPublicHostsL()[rand()%Cloud::getPublicHostsL().size()];
+     cout << "C Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName()  << " (" << vm->getRunningHost()->getName() << ")"  << endl;
       vm->migrate((Host*)receiver);
-      new InstanceResumeEv(vm,GlobalClock::get()+60);
+     cout << "C Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName()  << " (" << vm->getRunningHost()->getName() << ")"  << endl;
+      new InstanceResumeEv(vm,GlobalClock::get()+10);
     }
+  }
 }
 
 VM *Scheduler::vmSelection( User& owner, Task& task ) {
@@ -63,7 +75,6 @@ Host *Scheduler::receiverNodeSelection( Host& sender ) {
 }
 
 Host *Scheduler::receiverCloudSelection( Host& sender ) {
-  
   return VMMigrationHostSelection::randomNodeReceiver(sender);
 }
 
@@ -169,6 +180,8 @@ Host* VMMigrationHostSelection::randomNodeReceiver( Host& source ) {
   int n = rand()%(source.getNode()->getHostsList().size()-1);
   Host *choice = source.getNode()->getHostsList()[n];
   if( *choice == source ) choice = source.getNode()->getHostsList()[n+1];
+  cout << "A Escolhi " << choice->getHostName() << " para " << source.getHostName() << endl;
+  if( source.getNode()->getId() != choice->getNode()->getId() ) abort();
   return (Host*) choice;
 }
 
@@ -178,21 +191,15 @@ Host* VMMigrationHostSelection::randomCloudReceiver( Host& source ) {
     int n = rand()%(Host::getHostsCount()-1);
     if( source.getId() == n ) ++n;
     choice = Host::getHostPtrById(n);
-  } while( choice->getFamily() < 100 );
+    cout << n << endl;
+  } while( choice->isPublic() == true );
+  cout << "B Escolhi " << choice->getHostName() << " para " << source.getHostName() << endl;
   return (Host*) choice;
 } 
 
 Host* VMMigrationHostSelection::circularNodeReceiver( Host& source ) {
   return (Host*) NULL;
 }
-
-/*
- * Host* VMMigrationHostSelection::randomCloudReceiver( Host& source ) { 
-  int n = rand()%(Host::getNbHosts()-1);
-  if( n >= source.getId() ) ++n;
-  return (Host*) Host::getHostPtrById(n);
-}
-*/
 
 Host* VMMigrationHostSelection::circularCloudReceiver( Host& source ) { 
   static int n = 0;

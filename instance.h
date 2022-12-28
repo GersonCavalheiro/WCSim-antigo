@@ -56,7 +56,7 @@ public:
   virtual void place( Task *t );
   virtual void unplace( Task *t );
   virtual bool fitRam( Task *t );
-  virtual void avanceTask( Task *t );
+  virtual void avanceTask( Task *t, int nbTasks );
   virtual void suspend() = 0;
   virtual void resume() = 0;
   virtual void migrate( int hostId ) = 0; 

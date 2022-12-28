@@ -45,13 +45,7 @@ void Simulator::run() {
     if( !(GlobalClock::get()%300) ) {
       cout << "[" << GlobalClock::get() << "]" << endl;
       Scheduler::nodeBalancer();
-    } 
-    if( !(GlobalClock::get()%300) ) {
-      cout << "[" << GlobalClock::get() << "]" << endl;
 //      Scheduler::cloudBalancer();
-    }
-    if( !(GlobalClock::get()%300) ) {
-      cout << "[" << GlobalClock::get() << "]" << endl;
       Scheduler::cloudBursting();
     }
   }

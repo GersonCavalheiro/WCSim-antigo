@@ -67,14 +67,11 @@ public:
 		  setDataStamp();
   }
 
-  virtual void releaseCore(int c= 1) {
-	          cout << "O" << endl;
-	          cout << "Usage: " << this->getId() << endl;
+  virtual void releaseCore(int c = 1) {
                   Usage::update(this->getId(),
 				GlobalClock::get()-getDataStamp(),
 				(float)occupedCores/cores);
-	          occupedCores -= c;
-	          cout << "P" << endl;
+	          occupedCores = (occupedCores <= c)?0:occupedCores-c;
 		  setDataStamp();
   }
 

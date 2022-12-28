@@ -20,7 +20,7 @@ void Usage::print() {
   }
 
   ofstream trace("output/trace.csv", ios::out);
-  trace << "Host,HostId,Idle,25%,50%,75%,100%,125%,150%,175%,>= 200%" << endl;
+  trace << "Host,HostId,25%,50%,75%,100%,125%,150%,175%,>= 200%" << endl;
   for( auto it = usage.begin() ; it != usage.end() ; ++it ) {
     trace << Host::getName(it->first) << "," << it->first;
     for( int i = 0 ; i < 8 ; ++i )

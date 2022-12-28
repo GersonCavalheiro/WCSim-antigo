@@ -38,11 +38,12 @@ void Instance::unplace( Task *t ) {
   --nbTasks;
 }
 
-void Instance::avanceTask( Task *t ) {
+void Instance::avanceTask( Task *t, int nbTasks ) {
   if( getStatus() != alive ) abort();
-  auto actualMips = (running->getActualMips() < this->getVMips())
-                    ? running->getActualMips()
-                    : this->getVMips() * running->getUtilizationRate();
+  auto actualMips = ((running->getActualMips() < this->getVMips())
+                    ? running->getActualMips() 
+                    : this->getVMips()) * running->getUtilizationRate();
+  actualMips = (nbTasks<=vCores)?actualMips:(actualMips*vCores)/nbTasks;
   int executed = actualMips * (GlobalClock::get() - t->getDataStamp());
   t->hup( executed );
   this->getOwner()->billing(running->getId(),executed);
