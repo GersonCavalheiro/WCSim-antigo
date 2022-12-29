@@ -176,7 +176,6 @@ Host* VMMigrationHostSelection::randomNodeReceiver( Host& source ) {
   int n = rand()%(source.getNode()->getHostsList().size()-1);
   Host *choice = source.getNode()->getHostsList()[n];
   if( *choice == source ) choice = source.getNode()->getHostsList()[n+1];
-  cout << "A Escolhi " << choice->getHostName() << " para " << source.getHostName() << endl;
   if( source.getNode()->getId() != choice->getNode()->getId() ) abort();
   return (Host*) choice;
 }
@@ -189,7 +188,6 @@ Host* VMMigrationHostSelection::randomCloudReceiver( Host& source ) {
     choice = Host::getHostPtrById(n);
     cout << n << endl;
   } while( choice->isPublic() == true );
-  cout << "B Escolhi " << choice->getHostName() << " para " << source.getHostName() << endl;
   return (Host*) choice;
 } 
 

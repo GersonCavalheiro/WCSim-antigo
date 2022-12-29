@@ -55,7 +55,7 @@ void VM::migrate( int hostId ) {
 }
 
 void VM::migrate( Host *receiver ) {
-  cout << "Migrando daqui: " << getRunningHost()->getName() << " para " << receiver->getName() << endl;
+  //cout << "Migrando daqui: " << getRunningHost()->getName() << " para " << receiver->getName() << endl;
   suspend();
   getRunningHost()->popVM(this);
   setRunningHost(receiver);

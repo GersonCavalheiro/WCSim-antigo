@@ -41,6 +41,7 @@ void Simulator::run() {
       } else GlobalClock::set(GlobalClock::get()+1);
     }
     Scheduler::localSchedule();
+    if( BoT::undoneBoTs() == 0 ) return;
 //    if( !(GlobalClock::get()%100)) cout << "Size = " << eventL.size() << " [" << GlobalClock::get() << ":" << nbEvents << "]" << endl;
     if( !(GlobalClock::get()%300) ) {
       cout << "[" << GlobalClock::get() << "]" << endl;
