@@ -47,7 +47,6 @@ PASSWD FILE - CLOUD USERS LOGIN (extension .pwd)
 -----------
 - Each line describes a user. The contends are: (separated by spaces)
 -- name (string): the name of the user (without spaces)
--- id (integer): unique identifier for the user
 -- node (integer): node hosting the user. If the corresponding node
    is not present in the simulated cloud, all submissions of this
    user will be discarded
@@ -56,7 +55,7 @@ PASSWD FILE - CLOUD USERS LOGIN (extension .pwd)
 -- vmFamily (integer): VM family code class. All VMs belong to the
    same family
 - Notice:
--- If name or id appears twice in this file, the file reading fails
+-- If name appears twice in this file, the file reading fails
 -- Only code 0 is available to vmFamily
 - During the execution:
 -- New VMs can be added to the user. The new VMs must to belong to
@@ -70,13 +69,12 @@ CLOUD FILE - DESCRIBES THE NODES IN THE CLOUD
 - Each line describes a node in the cloud. The contendas are (separeted
   by spaces)
 -- name (string): the name of the node (without spaces)
--- id (integer): the unique identifier of the node
 -- riseDate (integer): date when the node will be aggreagated to the
    cloud
 -- bareMetalFamily (integer): bare metal family class code
 - Notice
--- It is not necessarly to put ids in order, but if the a give id (or
-   name) appears twice in this file, the simulator fail reading the file
+-- It is not necessarly to put ids in order, but if the a give name
+   appears twice in this file, the simulator fail reading the file
    (unpredicable results at execution time)
 -- Only code 0 is available for bareMetalFamily
 
