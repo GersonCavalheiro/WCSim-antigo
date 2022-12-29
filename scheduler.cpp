@@ -6,6 +6,7 @@
 #include "user.h"
 #include "node.h"
 #include "host.h"
+#include "cloud.h"
 #include "virtualmachine.h"
 #include "task.h"
 
@@ -16,9 +17,7 @@ void Scheduler::nodeBalancer() {
     if( (*it)->getUtilizationRate() <= 0.5 && (*it)->getVMMap().size() > 1 ) {
      auto vm = ((*it)->getVMMap().begin())->second;
      auto receiver = Scheduler::receiverNodeSelection(*(Host*)(*it));
-     cout << "A Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName()  << " (" << vm->getRunningHost()->getName() << ")" << endl;
      vm->migrate(receiver);
-     cout << "A Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName()  << " (" << vm->getRunningHost()->getName() << ")" << endl;
      new InstanceResumeEv(vm,GlobalClock::get()+2);
     }
   }
@@ -33,15 +32,14 @@ void Scheduler::cloudBalancer() {
 	&& (*it)->getVMMap().size() > 1 ) {
       auto vm = ((*it)->getVMMap().begin())->second;
       auto receiver = Scheduler::receiverCloudSelection(*(Host*)(*it));
-     cout << "B Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName() << " (" << vm->getRunningHost()->getName() << ")" << endl;
       vm->migrate(receiver);
-     cout << "B Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName() << " (" << vm->getRunningHost()->getName() << ")" << endl;
       new InstanceResumeEv(vm,GlobalClock::get()+10);
     }
   }
 }
 
 void Scheduler::cloudBursting() {
+  if( Cloud::getPublicHostsL().size() == 0 ) return;
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
   for( auto it = hosts->begin() ; it != hosts->end() ; ++it ) {
     if( (Host*)(*it)->isPublic() ) continue;
@@ -50,9 +48,7 @@ void Scheduler::cloudBursting() {
 	&& (*it)->getVMMap().size() > 1 ) {
       auto vm = ((*it)->getVMMap().begin())->second;
       auto receiver = Cloud::getPublicHostsL()[rand()%Cloud::getPublicHostsL().size()];
-     cout << "C Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName()  << " (" << vm->getRunningHost()->getName() << ")"  << endl;
       vm->migrate((Host*)receiver);
-     cout << "C Origem: " << (*it)->getHostName() << " Destino: " << receiver->getHostName()  << " (" << vm->getRunningHost()->getName() << ")"  << endl;
       new InstanceResumeEv(vm,GlobalClock::get()+10);
     }
   }

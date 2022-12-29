@@ -29,7 +29,7 @@ void Simulator::run() {
   GlobalClock::set(eventL.front()->getDate());
   GlobalClock::set(0);
 
-  while( !eventL.empty() || BoT::undoneBoTs() > 0 ) {
+  while( !eventL.empty() && BoT::undoneBoTs() > 0 ) {
     if( !eventL.empty() ) {
       Event* ev = eventL.front();
       if( ev->getDate() == GlobalClock::get() ) {
