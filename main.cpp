@@ -50,6 +50,23 @@ int main( int argc, char **argv) {
 	                       << "\t\tNetwork: " << FileNames::getNetworkFileName() << endl;
 
   }
+  cout << "Scheduling: "
+#ifdef FIXEDSCH
+       << " fixed, "
+#endif
+#ifdef RANDOMSCH
+       << " random"
+#endif
+#ifdef NODESCH
+       << ", intra node"
+#endif
+#ifdef CLOUDSCH
+       << ", in the cloud"
+#endif
+#ifdef BURSTSCH
+       << ", bursting"
+#endif
+       << endl;
   startSequence();
 
 //  Cloud::printAllCloud();

@@ -45,9 +45,15 @@ void Simulator::run() {
 //    if( !(GlobalClock::get()%100)) cout << "Size = " << eventL.size() << " [" << GlobalClock::get() << ":" << nbEvents << "]" << endl;
     if( !(GlobalClock::get()%300) ) {
       cout << "[" << GlobalClock::get() << "]" << endl;
+#ifdef NODESCH
       Scheduler::nodeBalancer();
-//      Scheduler::cloudBalancer();
+#endif
+#ifdef CLOUDSCH
+      Scheduler::cloudBalancer();
+#endif
+#ifdef BURSTSCH
       Scheduler::cloudBursting();
+#endif
     }
   }
 
