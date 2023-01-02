@@ -18,9 +18,9 @@ struct Scheduler {
       if( (*it)->getStatus() == alive )
 	 (*it)->localSchedule();
   }
-  static void  nodeBalancer();
-  static void  cloudBalancer();
-  static void  cloudBursting();
+  static void  nodeScheduler();
+  static void  cloudScheduler();
+  static void  burstScheduler();
   static VM*   vmSelection( User& owner, Task& task );
   static Host* hostSelection( Node& node, Instance& vm );
   static Host* receiverNodeSelection( Host& sender );

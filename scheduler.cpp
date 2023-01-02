@@ -10,7 +10,7 @@
 #include "virtualmachine.h"
 #include "task.h"
 
-void Scheduler::nodeBalancer() {
+void Scheduler::nodeScheduler() {
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
   for( auto it = hosts->begin() ; it != hosts->end() ; ++it ) {
     if( (Host*)(*it)->isPublic() ) continue;
@@ -23,7 +23,7 @@ void Scheduler::nodeBalancer() {
   }
 }
 
-void Scheduler::cloudBalancer() {
+void Scheduler::cloudScheduler() {
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
   for( auto it = hosts->begin() ; it != hosts->end() ; ++it ) {
     if( (Host*)(*it)->isPublic() ) continue;
@@ -38,7 +38,7 @@ void Scheduler::cloudBalancer() {
   }
 }
 
-void Scheduler::cloudBursting() {
+void Scheduler::burstScheduler() {
   if( Cloud::getPublicHostsL().size() == 0 ) return;
   vector<BareMetal*> *hosts = LoadEvaluator::overLoaded();
   for( auto it = hosts->begin() ; it != hosts->end() ; ++it ) {
