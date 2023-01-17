@@ -44,7 +44,7 @@ public:
   inline void  setDataStamp() { lastDataStamp = GlobalClock::get(); }
   inline int   getDataStamp() const { return lastDataStamp; }
   inline int   getRemainingInstructions() const { return miRemaining; }
-  inline void  hup( int mi ) { miRemaining -= mi; }
+  inline void  hup( int mi ) { if( mi == 0 ) abort(); miRemaining -= mi; }
   inline void  suspend() { cout << "Not implemented. Line: " << __LINE__ << endl; }
   inline void  resume() { cout << "Not implemented. Line: " << __LINE__ << endl; }
 
