@@ -23,7 +23,6 @@ public:
   static void update( int n, int t, float u ) {
     if( t == 0 ) return;
     int p = (u < 2.0) ? (int) (u/0.25) : 8;
-    cout << "Faixa: " << p << " u = " << u << endl;
     usage.find(n)->second[p] += t;
   }
   static void print();

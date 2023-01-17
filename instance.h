@@ -26,7 +26,7 @@ private:
   Host *running; // launched, current location
 
 public:
-  Instance( Node *n, User *u, int vCores = 4, int vMips = 1000, int vRam = 16 );
+  Instance( Node *n, User *u, int vCores = 4, int vMips = 100, int vRam = 16 );
   inline int getId() { return id; }
   inline void setSourceNode( Node *n )
                  { sourceNode = n; }
@@ -69,7 +69,7 @@ public:
 
 class ThinInstance : public Instance {
 public:
-  ThinInstance( Node *n, User *u, int vCores = 1, int vMips = 10, int vRam = 4 ) 
+  ThinInstance( Node *n, User *u, int vCores = 1, int vMips = 100, int vRam = 4 ) 
      : Instance( n, u, vCores, vMips, vRam ) {}
   inline string getName() const
                          { return string("ThinVM"); }
@@ -77,7 +77,7 @@ public:
 
 class FatInstance : public Instance {
 public:
-  FatInstance( Node *n, User *u, int vCores = 16, int vMips = 100, int vRam = 16 ) 
+  FatInstance( Node *n, User *u, int vCores = 8, int vMips = 100, int vRam = 16 ) 
      : Instance( n, u, vCores, vMips, vRam ) {}
   inline string getName() const
                          { return string("FatVM"); }
