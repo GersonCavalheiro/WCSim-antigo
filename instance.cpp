@@ -41,14 +41,16 @@ void Instance::unplace( Task *t ) {
 void Instance::avanceTask( Task *t, int nbTasks ) {
   if( GlobalClock::get() == t->getDataStamp() ) return;
   if( getStatus() != alive ) abort();
-  auto actualMips = ((running->getActualMips() < this->getVMips())
-                    ? running->getActualMips() 
-                    : this->getVMips()) * running->getUtilizationRate();
-  actualMips = (nbTasks<=vCores)?actualMips:(actualMips*vCores)/nbTasks;
+
+  int actualMips = (running->getActualMips() < this->getVMips())
+                   ? running->getActualMips() 
+                   : (int)((float)(this->getVMips()) * running->getUtilizationRate());
+  actualMips = (nbTasks<=vCores)?actualMips:(int)((float)((actualMips*vCores))/nbTasks);
+  if( actualMips == 0 ) actualMips = 1; //Avoiding below 1 mpis
   int executed = actualMips
 	         * (GlobalClock::get() - t->getDataStamp());
-  t->hup( (executed)?executed:1 );
-  this->getOwner()->billing(running->getId(),(executed)?executed:1);
+  t->hup(executed);
+  this->getOwner()->billing(running->getId(),executed);
 }
 
 bool Instance::fitRam( Task *t ) {
