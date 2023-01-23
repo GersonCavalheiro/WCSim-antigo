@@ -1,6 +1,3 @@
 *.o
 *.swp
 RCLONE_TEST
-performance.csv
-trace.csv
-wallet.csv
