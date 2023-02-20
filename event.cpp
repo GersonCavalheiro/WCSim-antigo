@@ -55,6 +55,7 @@ void BoTFinishEv::execute() {
   vector<BoT*> succ = bot->getSuccessorsL();
   for( auto it = succ.begin() ; it != succ.end() ; ++it )
     (*it)->dependenceSatisfied();
+  cout << "BoTFT " << bot->getId() << " " << date << endl;
   if( Simulator::lastBoTFinishDate > date ) {
    cout << "Last: " << Simulator::lastBoTFinishDate << " New: " << date << endl;
    abort();
